@@ -246,12 +246,6 @@
       <Name>Npgsql</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' != 'Debug-net20' And '$(Configuration)' != 'Release-net20' And '$(Configuration)' != 'Debug-net35' And '$(Configuration)' != 'Release-net35'  ">
-    <ProjectReference Include="..\Npgsql.EntityFramework\Npgsql.EntityFramework.csproj">
-      <Project>{3ec85cba-5b79-11e3-8104-0022198ab089}</Project>
-      <Name>Npgsql.EntityFramework</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
