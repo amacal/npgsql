@@ -21,14 +21,9 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-using System;
-using System.Data;
-using System.Web.UI.WebControls;
-
 using Npgsql;
-using NpgsqlTypes;
-
 using NUnit.Framework;
+using System;
 
 namespace NpgsqlTests
 {
@@ -78,7 +73,6 @@ namespace NpgsqlTests
 
                 //Now cause the unique violation...
                 command.ExecuteNonQuery();
-
             }
             catch (NpgsqlException ex)
             {
@@ -112,7 +106,6 @@ namespace NpgsqlTests
                 command = new NpgsqlCommand(insertStatement, Conn);
                 //Cause the NOT NULL violation
                 command.ExecuteNonQuery();
-
             }
             catch (NpgsqlException ex)
             {
@@ -148,7 +141,6 @@ namespace NpgsqlTests
                 command = new NpgsqlCommand(castStatement, Conn);
                 //Cause the NOT NULL violation
                 command.ExecuteNonQuery();
-
             }
             catch (NpgsqlException ex)
             {

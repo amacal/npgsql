@@ -123,6 +123,10 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Security.3.2.3.0\lib\net40\Mono.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -130,11 +134,6 @@
     <Reference Include="System.Transactions" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug-net40' Or '$(Configuration)' == 'Release-net40' Or '$(Configuration)' == 'Debug-net45' Or '$(Configuration)' == 'Release-net45' ">
-    <Reference Include="Mono.Security">
-      <HintPath>..\lib\Mono.Security\4.0\Mono.Security.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Debug-net20' Or '$(Configuration)' == 'Release-net20' Or '$(Configuration)' == 'Debug-net35' Or '$(Configuration)' == 'Release-net35' ">
     <Reference Include="Mono.Security">
@@ -603,6 +602,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Target Name="PublisherPolicy">
     <AL LinkResources="PublisherPolicy.config" OutputAssembly="$(OutputPath)\policy.2.0.$(AssemblyName).dll" KeyFile="..\Npgsql.snk" />
