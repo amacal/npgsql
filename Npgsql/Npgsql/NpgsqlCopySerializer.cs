@@ -383,7 +383,7 @@ namespace Npgsql
         private static readonly byte[] esc_b = new byte[] { (byte)ASCIIBytes.b };
         private static readonly byte[] esc_f = new byte[] { (byte)ASCIIBytes.f };
         private static readonly byte[] esc_v = new byte[] { (byte)ASCIIBytes.v };
- 
+
         /// <summary>
         /// Escape sequence for the given character.
         /// </summary>
@@ -420,7 +420,6 @@ namespace Npgsql
                     {
                         return new byte[] {(byte) c};
                     }
-
             }
         }
 
@@ -519,11 +518,12 @@ namespace Npgsql
             FieldAdded();
         }
 
-        /// <summary>
-        /// Add string.
-        /// </summary>
-        /// <param name="fieldValue"></param>
         public void AddString(String fieldValue)
+        {
+            AddString(fieldValue, true);
+        }
+
+        private void AddString(String fieldValue, bool escape)
         {
             PrefixField();
             int bufferedUpto = 0;
@@ -539,23 +539,26 @@ namespace Npgsql
                 int escapeAt = fieldValue.Length;
                 byte[] escapeSequence = null;
 
-                // choose closest instance of strings to escape in fieldValue
-                for (int i = bufferedUpto; i < fieldValue.Length; i++)
+                if (escape)
                 {
-                    for (int j = 0; j < charactersToEscape.Length; j++)
+                    // choose closest instance of strings to escape in fieldValue
+                    for (int i = bufferedUpto; i < fieldValue.Length; i++)
                     {
-                        if (fieldValue[i] == charactersToEscape[j] && escapeAt > i)
+                        for (int j = 0; j < charactersToEscape.Length; j++)
                         {
-                            escapeAt = i;
-                            escapeSequence = EscapeSequenceBytes[j];
+                            if (fieldValue[i] == charactersToEscape[j] && escapeAt > i)
+                            {
+                                escapeAt = i;
+                                escapeSequence = EscapeSequenceBytes[j];
 
+                                break;
+                            }
+                        }
+
+                        if (escapeAt != fieldValue.Length)
+                        {
                             break;
                         }
-                    }
-
-                    if (escapeAt != fieldValue.Length)
-                    {
-                        break;
                     }
                 }
 
@@ -589,7 +592,7 @@ namespace Npgsql
         /// <param name="fieldValue"></param>
         public void AddInt32(Int32 fieldValue)
         {
-            AddString(string.Format(_cultureInfo, "{0}", fieldValue));
+            AddString(string.Format(_cultureInfo, "{0}", fieldValue), false);
         }
 
         /// <summary>
@@ -598,7 +601,7 @@ namespace Npgsql
         /// <param name="fieldValue"></param>
         public void AddInt64(Int64 fieldValue)
         {
-            AddString(string.Format(_cultureInfo, "{0}", fieldValue));
+            AddString(string.Format(_cultureInfo, "{0}", fieldValue), false);
         }
 
         /// <summary>
@@ -607,7 +610,7 @@ namespace Npgsql
         /// <param name="fieldValue"></param>
         public void AddNumber(double fieldValue)
         {
-            AddString(string.Format(_cultureInfo, "{0}", fieldValue));
+            AddString(string.Format(_cultureInfo, "{0}", fieldValue), false);
         }
 
         /// <summary>
@@ -616,7 +619,7 @@ namespace Npgsql
         /// <param name="fieldValue"></param>
         public void AddBool(bool fieldValue)
         {
-            AddString(fieldValue ? "TRUE" : "FALSE");
+            AddString(fieldValue ? "TRUE" : "FALSE", false);
         }
 
         /// <summary>
@@ -625,8 +628,7 @@ namespace Npgsql
         /// <param name="fieldValue"></param>
         public void AddDateTime(DateTime fieldValue)
         {
-            AddString(fieldValue.ToString("yyyy-MM-dd HH:mm:ss.ffffff"));
+            AddString(fieldValue.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), false);
         }
-
     }
 }
