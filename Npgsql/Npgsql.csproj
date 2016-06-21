@@ -34,28 +34,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-net45|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug-net45\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWS;UNMANAGED;NET35;NET40;NET45;ENTITIES</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug-net45\Npgsql.xml</DocumentationFile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-net45|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release-net45\</OutputPath>
-    <DefineConstants>TRACE;WINDOWS;UNMANAGED;NET35;NET40;NET45;ENTITIES</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release-net45\Npgsql.xml</DocumentationFile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-net40|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -68,7 +47,7 @@
     <NoWarn>
     </NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-net40|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release-net40\</OutputPath>
@@ -77,50 +56,6 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release-net40\Npgsql.xml</DocumentationFile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-net35|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug-net35\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWS;UNMANAGED;NET35;ENTITIES</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug-net35\Npgsql.xml</DocumentationFile>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-net35|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release-net35\</OutputPath>
-    <DefineConstants>TRACE;WINDOWS;UNMANAGED;NET35;ENTITIES</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release-net35\Npgsql.xml</DocumentationFile>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-net20|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug-net20\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWS;UNMANAGED</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug-net20\Npgsql.xml</DocumentationFile>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <NoWarn>
-    </NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-net20|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release-net20\</OutputPath>
-    <DefineConstants>TRACE;WINDOWS;UNMANAGED</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release-net20\Npgsql.xml</DocumentationFile>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
@@ -166,8 +101,6 @@
     <Compile Include="Npgsql\ASCIIBytes.cs" />
     <Compile Include="Npgsql\NpgsqlState.BackendResponse.cs" />
     <Compile Include="Npgsql\HashAlgorithm.cs" />
-    <Compile Include="Npgsql\MD5.cs" />
-    <Compile Include="Npgsql\MD5CryptoServiceProvider.cs" />
     <Compile Include="Npgsql\NpgsqlAsciiRow.cs" />
     <Compile Include="Npgsql\NpgsqlBackEndKeyData.cs" />
     <Compile Include="Npgsql\NpgsqlBind.cs" />
@@ -237,9 +170,6 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug-net20' Or '$(Configuration)' == 'Release-net20' ">
-    <Compile Include="Npgsql\LinqBridge-1.3.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Npgsql\NpgsqlClosedState.resx">
