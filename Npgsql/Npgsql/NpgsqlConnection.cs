@@ -26,6 +26,7 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using Mono.Security.Protocol.Tls;
 using System;
 using System.ComponentModel;
 using System.Data;
@@ -36,7 +37,6 @@ using System.Resources;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Transactions;
-using Mono.Security.Protocol.Tls;
 using IsolationLevel = System.Data.IsolationLevel;
 
 #if WITHDESIGN
@@ -71,6 +71,7 @@ namespace Npgsql
     {
         // Logging related values
         private static readonly String CLASSNAME = MethodBase.GetCurrentMethod().DeclaringType.Name;
+
         private static readonly ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType);
 
         // Parsed connection string cache
@@ -133,9 +134,11 @@ namespace Npgsql
 
         // Used when we closed the connector due to an error, but are pretending it's open.
         private bool _fakingOpen;
+
         // Used when the connection is closed but an TransactionScope is still active
         // (the actual close is postponed until the scope ends)
         private bool _postponingClose;
+
         private bool _postponingDispose;
 
         /// <summary>
@@ -331,7 +334,6 @@ namespace Npgsql
         {
             get { return settings.SSL; }
         }
-
 
         public Boolean UseSslStream
         {
@@ -685,7 +687,7 @@ namespace Npgsql
             }
 
             OpenCounter++;
-            this.OnStateChange (new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+            this.OnStateChange(new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
         }
 
         /// <summary>
@@ -784,7 +786,7 @@ namespace Npgsql
 
             connector = null;
 
-            this.OnStateChange (new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+            this.OnStateChange(new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
         }
 
         /// <summary>
@@ -1106,7 +1108,7 @@ namespace Npgsql
 
             // Set the UserName explicitly to freeze any Integrated Security-determined names
             if (settings.IntegratedSecurity)
-               settings.UserName = settings.UserName;
+                settings.UserName = settings.UserName;
 
             RefreshConnectionString();
             LogConnectionString();
@@ -1203,38 +1205,51 @@ namespace Npgsql
             {
                 case "MetaDataCollections":
                     return NpgsqlSchema.GetMetaDataCollections();
+
                 case "Restrictions":
                     return NpgsqlSchema.GetRestrictions();
+
                 case "DataSourceInformation":
                     return NpgsqlSchema.GetDataSourceInformation();
+
                 case "DataTypes":
                     throw new NotSupportedException();
                 case "ReservedWords":
                     return NpgsqlSchema.GetReservedWords();
-                    // custom collections for npgsql
+                // custom collections for npgsql
                 case "Databases":
                     return NpgsqlSchema.GetDatabases(this, restrictions);
+
                 case "Schemata":
                     return NpgsqlSchema.GetSchemata(this, restrictions);
+
                 case "Tables":
                     return NpgsqlSchema.GetTables(this, restrictions);
+
                 case "Columns":
                     return NpgsqlSchema.GetColumns(this, restrictions);
+
                 case "Views":
                     return NpgsqlSchema.GetViews(this, restrictions);
+
                 case "Users":
                     return NpgsqlSchema.GetUsers(this, restrictions);
+
                 case "Indexes":
                     return NpgsqlSchema.GetIndexes(this, restrictions);
+
                 case "IndexColumns":
                     return NpgsqlSchema.GetIndexColumns(this, restrictions);
+
                 case "Constraints":
                 case "PrimaryKey":
                 case "UniqueKeys":
                 case "ForeignKeys":
                     return NpgsqlSchema.GetConstraints(this, restrictions, collectionName);
+
                 case "ConstraintColumns":
                     return NpgsqlSchema.GetConstraintColumns(this, restrictions);
+
                 default:
                     throw new ArgumentOutOfRangeException("collectionName", collectionName, "Invalid collection name");
             }
@@ -1266,6 +1281,7 @@ namespace Npgsql
         }
 
 #if NET35
+
         /// <summary>
         /// DB provider factory.
         /// </summary>
@@ -1276,6 +1292,7 @@ namespace Npgsql
                 return NpgsqlFactory.Instance;
             }
         }
+
 #endif
     }
 }

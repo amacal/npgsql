@@ -29,6 +29,7 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using NpgsqlTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,7 +37,6 @@ using System.ComponentModel;
 using System.Data.Common;
 using System.Reflection;
 using System.Resources;
-using NpgsqlTypes;
 
 #if WITHDESIGN
 
@@ -61,6 +61,7 @@ namespace Npgsql
 
         // Dictionary lookups for GetValue to improve performance
         private Dictionary<string, int> lookup;
+
         private Dictionary<string, int> lookupIgnoreCase;
 
         // Logging related value
@@ -87,8 +88,6 @@ namespace Npgsql
             lookup = null;
             lookupIgnoreCase = null;
         }
-
-        #region NpgsqlParameterCollection Member
 
         /// <summary>
         /// Gets the <see cref="Npgsql.NpgsqlParameter">NpgsqlParameter</see> with the specified name.
@@ -336,10 +335,6 @@ namespace Npgsql
             return this.Add(new NpgsqlParameter(parameterName, parameterType, size, sourceColumn));
         }
 
-        #endregion
-
-        #region IDataParameterCollection Member
-
         /// <summary>
         /// Removes the specified <see cref="Npgsql.NpgsqlParameter">NpgsqlParameter</see> from the collection using the parameter name.
         /// </summary>
@@ -378,18 +373,18 @@ namespace Npgsql
                 parameterName = parameterName.Remove(0, 1);
             }
 
-            // Using a dictionary is much faster for 5 or more items            
+            // Using a dictionary is much faster for 5 or more items
             if (this.InternalList.Count >= 5)
-            {            
+            {
                 if (this.lookup == null)
                 {
                     this.lookup = new Dictionary<string, int>();
-                    for (scanIndex = 0 ; scanIndex < this.InternalList.Count ; scanIndex++)
+                    for (scanIndex = 0; scanIndex < this.InternalList.Count; scanIndex++)
                     {
                         var item = this.InternalList[scanIndex];
 
                         // Store only the first of each distinct value
-                        if (! this.lookup.ContainsKey(item.CleanName))
+                        if (!this.lookup.ContainsKey(item.CleanName))
                         {
                             this.lookup.Add(item.CleanName, scanIndex);
                         }
@@ -406,12 +401,12 @@ namespace Npgsql
                 if (this.lookupIgnoreCase == null)
                 {
                     this.lookupIgnoreCase = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
-                    for (scanIndex = 0 ; scanIndex < this.InternalList.Count ; scanIndex++)
+                    for (scanIndex = 0; scanIndex < this.InternalList.Count; scanIndex++)
                     {
                         var item = this.InternalList[scanIndex];
-                        
+
                         // Store only the first of each distinct value
-                        if (! this.lookupIgnoreCase.ContainsKey(item.CleanName))
+                        if (!this.lookupIgnoreCase.ContainsKey(item.CleanName))
                         {
                             this.lookupIgnoreCase.Add(item.CleanName, scanIndex);
                         }
@@ -431,7 +426,7 @@ namespace Npgsql
 
             // Scan until a case insensitive match is found, and save its index for possible return.
             // Items that don't match loosely cannot possibly match exactly.
-            for (scanIndex = 0 ; scanIndex < this.InternalList.Count ; scanIndex++)
+            for (scanIndex = 0; scanIndex < this.InternalList.Count; scanIndex++)
             {
                 var item = this.InternalList[scanIndex];
 
@@ -445,11 +440,11 @@ namespace Npgsql
 
             // Then continue the scan until a case sensitive match is found, and return it.
             // If a case insensitive match was found, it will be re-checked for an exact match.
-            for ( ; scanIndex < this.InternalList.Count ; scanIndex++)
+            for (; scanIndex < this.InternalList.Count; scanIndex++)
             {
                 var item = this.InternalList[scanIndex];
 
-                if(item.CleanName == parameterName)
+                if (item.CleanName == parameterName)
                 {
                     return scanIndex;
                 }
@@ -458,10 +453,6 @@ namespace Npgsql
             // If a case insensitive match was found, it will be returned here.
             return retIndex;
         }
-
-        #endregion
-
-        #region IList Member
 
         /// <summary>
         /// Report whether the collection is read only.  Always false.
@@ -482,7 +473,7 @@ namespace Npgsql
         public override void RemoveAt(int index)
         {
             NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "RemoveAt", index);
-            if(this.InternalList.Count - 1 < index)
+            if (this.InternalList.Count - 1 < index)
             {
                 throw new IndexOutOfRangeException();
             }
@@ -528,7 +519,6 @@ namespace Npgsql
             RemoveAt(index);
         }
 
-
         /// <summary>
         /// Removes the specified <see cref="Npgsql.NpgsqlParameter">NpgsqlParameter</see> from the collection.
         /// </summary>
@@ -539,7 +529,6 @@ namespace Npgsql
             CheckType(oValue);
             Remove(oValue as NpgsqlParameter);
         }
-
 
         /// <summary>
         /// Gets a value indicating whether a <see cref="Npgsql.NpgsqlParameter">NpgsqlParameter</see> exists in the collection.
@@ -553,7 +542,7 @@ namespace Npgsql
             {
                 return false;
             }
-            return this.InternalList.Contains((NpgsqlParameter) value);
+            return this.InternalList.Contains((NpgsqlParameter)value);
         }
 
         /// <summary>
@@ -588,7 +577,7 @@ namespace Npgsql
         public override void Clear()
         {
             NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "Clear");
-            foreach(NpgsqlParameter toRemove in this.InternalList)
+            foreach (NpgsqlParameter toRemove in this.InternalList)
             {
                 // clean up the parameter so it can be added to another command if required.
                 toRemove.Collection = null;
@@ -606,7 +595,7 @@ namespace Npgsql
         {
             NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "IndexOf", value);
             CheckType(value);
-            return this.InternalList.IndexOf((NpgsqlParameter) value);
+            return this.InternalList.IndexOf((NpgsqlParameter)value);
         }
 
         /// <summary>
@@ -618,7 +607,7 @@ namespace Npgsql
         {
             NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "Add", value);
             CheckType(value);
-            this.Add((NpgsqlParameter) value);
+            this.Add((NpgsqlParameter)value);
             return Count - 1;
         }
 
@@ -633,10 +622,6 @@ namespace Npgsql
                 return false;
             }
         }
-
-        #endregion
-
-        #region ICollection Member
 
         /// <summary>
         /// Report whether the collection is synchronized.
@@ -692,10 +677,6 @@ namespace Npgsql
             }
         }
 
-        #endregion
-
-        #region IEnumerable Member
-
         /// <summary>
         /// Returns an enumerator that can iterate through the collection.
         /// </summary>
@@ -705,8 +686,6 @@ namespace Npgsql
             NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "GetEnumerator");
             return this.InternalList.GetEnumerator();
         }
-
-        #endregion
 
         /// <summary>
         /// Add an Array of parameters to the collection.
@@ -748,7 +727,7 @@ namespace Npgsql
         /// <param name="value"></param>
         protected override void SetParameter(string parameterName, DbParameter value)
         {
-            this[parameterName] = (NpgsqlParameter) value;
+            this[parameterName] = (NpgsqlParameter)value;
         }
 
         /// <summary>
@@ -758,7 +737,7 @@ namespace Npgsql
         /// <param name="value"></param>
         protected override void SetParameter(int index, DbParameter value)
         {
-            this[index] = (NpgsqlParameter) value;
+            this[index] = (NpgsqlParameter)value;
         }
 
         /// <summary>
@@ -776,22 +755,22 @@ namespace Npgsql
             }
         }
 
-/*
-        /// <summary>
-        /// In methods taking an array as argument this method is used to verify
-        /// that the argument has the type <see cref="Npgsql.NpgsqlParameter">NpgsqlParameter</see>[]
-        /// </summary>
-        /// <param name="array">The array to verify</param>
-        private void CheckType(Array array)
-        {
-            NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "CheckType", array);
-            if (array.GetType() != typeof (NpgsqlParameter[]))
-            {
-                throw new InvalidCastException(
-                    String.Format(this.resman.GetString("Exception_WrongType"), array.GetType().ToString()));
-            }
-        }
-*/
+        /*
+                /// <summary>
+                /// In methods taking an array as argument this method is used to verify
+                /// that the argument has the type <see cref="Npgsql.NpgsqlParameter">NpgsqlParameter</see>[]
+                /// </summary>
+                /// <param name="array">The array to verify</param>
+                private void CheckType(Array array)
+                {
+                    NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "CheckType", array);
+                    if (array.GetType() != typeof (NpgsqlParameter[]))
+                    {
+                        throw new InvalidCastException(
+                            String.Format(this.resman.GetString("Exception_WrongType"), array.GetType().ToString()));
+                    }
+                }
+        */
 
         /// <summary>
         /// Report the offset within the collection of the given parameter.
@@ -837,15 +816,15 @@ namespace Npgsql
         /// <returns>True if the parameter was found and removed, otherwise false.</returns>
         public bool Remove(NpgsqlParameter item)
         {
-            if(item == null)
+            if (item == null)
             {
                 return false;
             }
-            if(item.Collection != this)
+            if (item.Collection != this)
             {
                 throw new InvalidOperationException("The item does not belong to this collection");
             }
-            if(InternalList.Remove(item))
+            if (InternalList.Remove(item))
             {
                 item.Collection = null;
                 this.InvalidateHashLookups();

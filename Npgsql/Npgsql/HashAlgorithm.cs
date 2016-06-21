@@ -94,7 +94,7 @@ namespace Npgsql
                 throw new ObjectDisposedException("HashAlgorithm");
             }
 
-            int l = (int) (inputStream.Length - inputStream.Position);
+            int l = (int)(inputStream.Length - inputStream.Position);
             byte[] buffer = new byte[l];
             inputStream.Read(buffer, 0, l);
 

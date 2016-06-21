@@ -35,7 +35,6 @@ namespace Npgsql
     /// </summary>
     internal sealed class NpgsqlCopyInState : NpgsqlState
     {
-
         private NpgsqlCopyFormat _copyFormat = null;
 
         public NpgsqlCopyInState()
@@ -85,7 +84,7 @@ namespace Npgsql
         public override void SendCopyData(NpgsqlConnector context, byte[] buf, int off, int len)
         {
             Stream toServer = context.Stream;
-            toServer.WriteByte((byte) FrontEndMessageCode.CopyData);
+            toServer.WriteByte((byte)FrontEndMessageCode.CopyData);
             PGUtil.WriteInt32(toServer, len + 4);
             toServer.Write(buf, off, len);
         }
@@ -96,7 +95,7 @@ namespace Npgsql
         public override void SendCopyDone(NpgsqlConnector context)
         {
             Stream toServer = context.Stream;
-            toServer.WriteByte((byte) FrontEndMessageCode.CopyDone);
+            toServer.WriteByte((byte)FrontEndMessageCode.CopyDone);
             PGUtil.WriteInt32(toServer, 4); // message without data
             ProcessAndDiscardBackendResponses(context);
         }
@@ -110,7 +109,7 @@ namespace Npgsql
         public override void SendCopyFail(NpgsqlConnector context, String message)
         {
             Stream toServer = context.Stream;
-            toServer.WriteByte((byte) FrontEndMessageCode.CopyFail);
+            toServer.WriteByte((byte)FrontEndMessageCode.CopyFail);
             byte[] buf = BackendEncoding.UTF8Encoding.GetBytes((message ?? string.Empty) + '\x00');
             PGUtil.WriteInt32(toServer, 4 + buf.Length);
             toServer.Write(buf, 0, buf.Length);

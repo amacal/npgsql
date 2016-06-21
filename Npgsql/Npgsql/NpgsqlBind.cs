@@ -150,7 +150,7 @@ namespace Npgsql
             {
                 PGUtil.WriteInt16(outputStream, (Int16)_parameterValues.Length);
 
-                for (int i = 0 ; i < _parameterValues.Length ; i++)
+                for (int i = 0; i < _parameterValues.Length; i++)
                 {
                     Byte[] parameterValue = _parameterValues[i];
 
@@ -173,7 +173,7 @@ namespace Npgsql
 
             PGUtil.WriteInt16(outputStream, (Int16)_resultFormatCodes.Length);
 
-            foreach (short code in  _resultFormatCodes)
+            foreach (short code in _resultFormatCodes)
             {
                 PGUtil.WriteInt16(outputStream, code);
             }

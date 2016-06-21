@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+
 //using System.Text;
 
 namespace Npgsql
@@ -115,6 +116,7 @@ namespace Npgsql
         }
 
         public Cache() : base() { }
+
         public Cache(int cacheSize) : base()
         {
             this._cache_size = cacheSize;

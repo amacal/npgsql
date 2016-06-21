@@ -1,8 +1,6 @@
-using System;
-using System.Data;
-
 using Npgsql;
 using NUnit.Framework;
+using System.Data;
 
 namespace NpgsqlTests
 {

@@ -28,14 +28,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Reflection;
-using System.Resources;
 using System.Text;
-using System.Threading;
 
 namespace Npgsql
 {
@@ -76,6 +70,7 @@ namespace Npgsql
 
             // extended query backend messages
             ParseComplete = '1',
+
             BindComplete = '2',
             PortalSuspended = 's',
             ParameterDescription = 't',
@@ -97,7 +92,7 @@ namespace Npgsql
             AuthenticationSSPI = 9
         }
 
-        static byte[] NullTerminateArray(byte[] input)
+        private static byte[] NullTerminateArray(byte[] input)
         {
             byte[] output = new byte[input.Length + 1];
             input.CopyTo(output, 0);
@@ -119,7 +114,7 @@ namespace Npgsql
                 for (;;)
                 {
                     // Check the first Byte of response.
-                    BackEndMessageCode message = (BackEndMessageCode) stream.ReadByte();
+                    BackEndMessageCode message = (BackEndMessageCode)stream.ReadByte();
                     switch (message)
                     {
                         case BackEndMessageCode.ErrorResponse:
@@ -144,6 +139,7 @@ namespace Npgsql
                             }
 
                             break;
+
                         case BackEndMessageCode.AuthenticationRequest:
 
                             NpgsqlEventLog.LogMsg(resman, "Log_ProtocolMessage", LogLevel.Debug, "AuthenticationRequest");
@@ -151,12 +147,13 @@ namespace Npgsql
                             // Get the length in case we're getting AuthenticationGSSContinue
                             int authDataLength = PGUtil.ReadInt32(stream) - 8;
 
-                            AuthenticationRequestType authType = (AuthenticationRequestType) PGUtil.ReadInt32(stream);
+                            AuthenticationRequestType authType = (AuthenticationRequestType)PGUtil.ReadInt32(stream);
                             switch (authType)
                             {
                                 case AuthenticationRequestType.AuthenticationOk:
                                     NpgsqlEventLog.LogMsg(resman, "Log_AuthenticationOK", LogLevel.Debug);
                                     break;
+
                                 case AuthenticationRequestType.AuthenticationClearTextPassword:
                                     NpgsqlEventLog.LogMsg(resman, "Log_AuthenticationClearTextRequest", LogLevel.Debug);
 
@@ -166,6 +163,7 @@ namespace Npgsql
                                     context.Authenticate(NullTerminateArray(context.Password));
 
                                     break;
+
                                 case AuthenticationRequestType.AuthenticationMD5Password:
                                     NpgsqlEventLog.LogMsg(resman, "Log_AuthenticationMD5Request", LogLevel.Debug);
                                     // Now do the "MD5-Thing"
@@ -269,6 +267,7 @@ namespace Npgsql
                                     throw new NpgsqlException(errors);
                             }
                             break;
+
                         case BackEndMessageCode.RowDescription:
                             yield return new NpgsqlRowDescription(stream, context.OidToNameMapping, context.CompatVersion);
                             break;
@@ -291,7 +290,7 @@ namespace Npgsql
 
                         case BackEndMessageCode.ReadyForQuery:
 
-//                            NpgsqlEventLog.LogMsg(resman, "Log_ProtocolMessage", LogLevel.Debug, "ReadyForQuery");
+                            //                            NpgsqlEventLog.LogMsg(resman, "Log_ProtocolMessage", LogLevel.Debug, "ReadyForQuery");
 
                             // Possible status bytes returned:
                             //   I = Idle (no transaction active).
@@ -330,20 +329,24 @@ namespace Npgsql
                             PGUtil.ReadInt32(stream);
                             yield return new CompletedResponse(stream);
                             break;
+
                         case BackEndMessageCode.ParseComplete:
                             NpgsqlEventLog.LogMsg(resman, "Log_ProtocolMessage", LogLevel.Debug, "ParseComplete");
                             // Just read up the message length.
                             PGUtil.ReadInt32(stream);
                             break;
+
                         case BackEndMessageCode.BindComplete:
-//                            NpgsqlEventLog.LogMsg(resman, "Log_ProtocolMessage", LogLevel.Debug, "BindComplete");
+                            //                            NpgsqlEventLog.LogMsg(resman, "Log_ProtocolMessage", LogLevel.Debug, "BindComplete");
                             // Just read up the message length.
                             PGUtil.ReadInt32(stream);
                             break;
+
                         case BackEndMessageCode.EmptyQueryResponse:
                             NpgsqlEventLog.LogMsg(resman, "Log_ProtocolMessage", LogLevel.Debug, "EmptyQueryResponse");
                             PGUtil.ReadInt32(stream);
                             break;
+
                         case BackEndMessageCode.NotificationResponse:
                             // Eat the length
                             PGUtil.ReadInt32(stream);
@@ -353,6 +356,7 @@ namespace Npgsql
                                 yield break;
                             }
                             break;
+
                         case BackEndMessageCode.ParameterStatus:
                             NpgsqlEventLog.LogMsg(resman, "Log_ProtocolMessage", LogLevel.Debug, "ParameterStatus");
                             NpgsqlParameterStatus parameterStatus = new NpgsqlParameterStatus(stream);
@@ -380,6 +384,7 @@ namespace Npgsql
                                 context.ServerVersion = new Version(versionString);
                             }
                             break;
+
                         case BackEndMessageCode.NoData:
                             // This nodata message may be generated by prepare commands issued with queries which doesn't return rows
                             // for example insert, update or delete.
@@ -395,7 +400,7 @@ namespace Npgsql
                             PGUtil.ReadInt32(stream); // length redundant
                             context.CurrentState.StartCopy(context, ReadCopyHeader(stream));
                             yield break;
-                                // Either StartCopy called us again to finish the operation or control should be passed for user to feed copy data
+                        // Either StartCopy called us again to finish the operation or control should be passed for user to feed copy data
 
                         case BackEndMessageCode.CopyOutResponse:
                             // Enter COPY sub protocol and start pulling data from server
@@ -404,7 +409,7 @@ namespace Npgsql
                             PGUtil.ReadInt32(stream); // length redundant
                             context.CurrentState.StartCopy(context, ReadCopyHeader(stream));
                             yield break;
-                                // Either StartCopy called us again to finish the operation or control should be passed for user to feed copy data
+                        // Either StartCopy called us again to finish the operation or control should be passed for user to feed copy data
 
                         case BackEndMessageCode.CopyData:
                             NpgsqlEventLog.LogMsg(resman, "Log_ProtocolMessage", LogLevel.Debug, "CopyData");
@@ -431,7 +436,7 @@ namespace Npgsql
                             //   Backend has gone insane?
                             // FIXME
                             // what exception should we really throw here?
-                            throw new NotSupportedException(String.Format("Backend sent unrecognized response type: {0}", (Char) message));
+                            throw new NotSupportedException(String.Format("Backend sent unrecognized response type: {0}", (Char)message));
                     }
                 }
             }

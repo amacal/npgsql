@@ -41,6 +41,6 @@ namespace Npgsql
 
         private NpgsqlFlush()
         : base(FrontEndMessageCode.Flush)
-        {}
+        { }
     }
 }

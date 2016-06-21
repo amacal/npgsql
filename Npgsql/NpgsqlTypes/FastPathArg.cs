@@ -31,9 +31,9 @@
 -------------------------------------------------------------------------
 */
 
+using Npgsql;
 using System;
 using System.IO;
-using Npgsql;
 
 namespace NpgsqlTypes
 {

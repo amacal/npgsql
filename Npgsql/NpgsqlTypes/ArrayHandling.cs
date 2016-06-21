@@ -24,13 +24,12 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using Npgsql;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using System.Net;
-using Npgsql;
+using System.Text;
 
 namespace NpgsqlTypes
 {
@@ -68,9 +67,9 @@ namespace NpgsqlTypes
         {
             MemoryStream array = new MemoryStream();
 
-            if (! forExtendedQuery)
+            if (!forExtendedQuery)
             {
-                if (! options.UseConformantStrings && options.Supports_E_StringPrefix)
+                if (!options.UseConformantStrings && options.Supports_E_StringPrefix)
                 {
                     array.WriteByte((byte)ASCIIBytes.E);
                 }
@@ -78,12 +77,12 @@ namespace NpgsqlTypes
                 array.WriteByte((byte)ASCIIBytes.SingleQuote);
             }
 
-            if (! WriteItemText(TypeInfo, NativeData, array, forExtendedQuery, options))
+            if (!WriteItemText(TypeInfo, NativeData, array, forExtendedQuery, options))
             {
                 array.Write(ASCIIArrayByteArrays.EmptyArray, 0, ASCIIArrayByteArrays.EmptyArray.Length);
             }
 
-            if (! forExtendedQuery)
+            if (!forExtendedQuery)
             {
                 array.WriteByte((byte)ASCIIBytes.SingleQuote);
             }
@@ -101,7 +100,7 @@ namespace NpgsqlTypes
             // Even an string being an IEnumerable, it shouldn't be processed. It will be processed on the last else.
             // See http://pgfoundry.org/tracker/?func=detail&atid=592&aid=1010514&group_id=1000140 for more info.
 
-            if(item == null || NpgsqlTypesHelper.DefinedType(item))
+            if (item == null || NpgsqlTypesHelper.DefinedType(item))
             {
                 byte[] element;
 
@@ -129,7 +128,6 @@ namespace NpgsqlTypes
 
                 return true;
             }
-
         }
 
         private bool WriteArrayText(NpgsqlNativeTypeInfo TypeInfo, Array ar, MemoryStream array, Boolean forExtendedQuery, NativeToBackendTypeConverterOptions options)
@@ -167,7 +165,7 @@ namespace NpgsqlTypes
                 int curlength = 1;
                 foreach (int lengthTest in lengths)
                 {
-                    if (c%(curlength *= lengthTest) == 0)
+                    if (c % (curlength *= lengthTest) == 0)
                     {
                         array.WriteByte((byte)ASCIIBytes.BraceCurlyLeft);
                     }
@@ -185,7 +183,7 @@ namespace NpgsqlTypes
                 curlength = 1;
                 foreach (int lengthTest in lengths)
                 {
-                    if (c%(curlength *= lengthTest) == 0)
+                    if (c % (curlength *= lengthTest) == 0)
                     {
                         array.WriteByte((byte)ASCIIBytes.BraceCurlyRight);
                     }
@@ -216,7 +214,7 @@ namespace NpgsqlTypes
             PGUtil.WriteInt32(dst, options.OidToNameMapping[_elementConverter.Name].OID);
 
             // White dimension descriptors.
-            for (int i = 0 ; i < NativeData.Rank ; i++)
+            for (int i = 0; i < NativeData.Rank; i++)
             {
                 // Number of elements in the dimension.
                 PGUtil.WriteInt32(dst, NativeData.GetLength(i));
@@ -243,7 +241,7 @@ namespace NpgsqlTypes
             if (dimensionOffset < nativeData.Rank - 1)
             {
                 // Drill down recursively until we hit a single dimension array.
-                for (int i = dimensionLBound ; i < dimensionLBound + dimensionLength ; i++)
+                for (int i = dimensionLBound; i < dimensionLBound + dimensionLength; i++)
                 {
                     dimensionOffsets[dimensionOffset] = i;
 
@@ -253,7 +251,7 @@ namespace NpgsqlTypes
             else
             {
                 // Write the individual array elements to the output stream.
-                for (int i = dimensionLBound ; i < dimensionLBound + dimensionLength ; i++)
+                for (int i = dimensionLBound; i < dimensionLBound + dimensionLength; i++)
                 {
                     object elementNative;
 
@@ -285,7 +283,6 @@ namespace NpgsqlTypes
             bool writtenSomething = false;
             bool firstItem = true;
 
-
             //write each item with a comma between them.
             foreach (object item in col)
             {
@@ -305,7 +302,6 @@ namespace NpgsqlTypes
             if (writtenSomething)
             {
                 array.WriteByte((byte)ASCIIBytes.BraceCurlyRight);
-
             }
 
             return writtenSomething;
@@ -317,8 +313,6 @@ namespace NpgsqlTypes
     /// </summary>
     internal class ArrayBackendToNativeTypeConverter
     {
-        #region Helper Classes
-
         /// <summary>
         /// Takes a string representation of a pg 1-dimensional array
         /// (or a 1-dimensional row within an n-dimensional array)
@@ -342,6 +336,7 @@ namespace NpgsqlTypes
                     case '"': //entering of leaving a quoted string
                         inQuoted = !inQuoted;
                         break;
+
                     case ',': //ending this item, unless we're in a quoted string.
                         if (inQuoted)
                         {
@@ -353,9 +348,11 @@ namespace NpgsqlTypes
                             sb = new StringBuilder(source.Length - idx);
                         }
                         break;
+
                     case '\\': //next char is an escaped character, grab it, ignore the \ we are on now.
                         sb.Append(source[++idx]);
                         break;
+
                     default:
                         sb.Append(c);
                         break;
@@ -387,6 +384,7 @@ namespace NpgsqlTypes
                     case '"': //beginning or ending a quoted chunk.
                         inQuoted = !inQuoted;
                         break;
+
                     case ',':
                         if (braceCount == 0) //if bracecount is zero we've done our chunk
                         {
@@ -394,15 +392,18 @@ namespace NpgsqlTypes
                             startIdx = idx + 1;
                         }
                         break;
+
                     case '\\': //next character is escaped. Skip it.
                         ++idx;
                         break;
+
                     case '{': //up the brace count if this isn't in a quoted string
                         if (!inQuoted)
                         {
                             ++braceCount;
                         }
                         break;
+
                     case '}': //lower the brace count if this isn't in a quoted string
                         if (!inQuoted)
                         {
@@ -443,7 +444,7 @@ namespace NpgsqlTypes
                 get { return _bounds; }
             }
 
-            public static implicit operator int[](IntSetIterator isi)
+            public static implicit operator int[] (IntSetIterator isi)
             {
                 return isi._current;
             }
@@ -490,8 +491,6 @@ namespace NpgsqlTypes
             }
         }
 
-        #endregion
-
         private readonly NpgsqlBackendTypeInfo _elementConverter;
 
         /// <summary>
@@ -509,7 +508,7 @@ namespace NpgsqlTypes
         public object ArrayTextToArray(NpgsqlBackendTypeInfo TypeInfo, byte[] bBackendData, Int16 TypeSize, Int32 TypeModifier)
         {
             string BackendData = BackendEncoding.UTF8Encoding.GetString(bBackendData);
-//first create an arraylist, then convert it to an array.
+            //first create an arraylist, then convert it to an array.
             return ToArray(ToArrayList(TypeInfo, BackendData, TypeSize, TypeModifier), _elementConverter.Type);
         }
 
@@ -528,7 +527,7 @@ namespace NpgsqlTypes
                 return list;
             }
             if (stripBraces[0] == '{')
-                //there are still braces so we have an n-dimension array. Recursively build an ArrayList of ArrayLists
+            //there are still braces so we have an n-dimension array. Recursively build an ArrayList of ArrayLists
             {
                 foreach (string arrayChunk in ArrayChunkEnumeration(stripBraces))
                 {
@@ -536,7 +535,7 @@ namespace NpgsqlTypes
                 }
             }
             else
-                //We're either dealing with a 1-dimension array or treating a row of an n-dimension array. In either case parse the elements and put them in our ArrayList
+            //We're either dealing with a 1-dimension array or treating a row of an n-dimension array. In either case parse the elements and put them in our ArrayList
             {
                 foreach (string token in TokenEnumeration(stripBraces))
                 {
@@ -637,7 +636,7 @@ namespace NpgsqlTypes
             dimLBounds = new int[nDims];
 
             // Populate array dimension lengths and lower bounds.
-            for (dimOffset = 0 ; dimOffset < nDims ; dimOffset++)
+            for (dimOffset = 0; dimOffset < nDims; dimOffset++)
             {
                 dimLengths[dimOffset] = PGUtil.ReadInt32(BackendData, dataOffset);
                 dataOffset += 4;
@@ -672,7 +671,7 @@ namespace NpgsqlTypes
             if (dimOffset < dimLengths.Length - 1)
             {
                 // Drill down recursively until we hit a single dimension array.
-                for (int i = dimensionLBound ; i < end ; i++)
+                for (int i = dimensionLBound; i < end; i++)
                 {
                     dstOffsets[dimOffset] = i;
 
@@ -682,7 +681,7 @@ namespace NpgsqlTypes
             else
             {
                 // Populate a single dimension array.
-                for (int i = dimensionLBound ; i < end ; i++)
+                for (int i = dimensionLBound; i < end; i++)
                 {
                     // Sanity check.
                     if (backendData.Length < dataOffset + 4)

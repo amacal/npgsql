@@ -46,6 +46,7 @@ namespace Npgsql
             Parameter = PGUtil.ReadString(stream);
             ParameterValue = PGUtil.ReadString(stream);
         }
+
         public NpgsqlParameterStatus(string parameter, string parameterValue)
         {
             Parameter = parameter;

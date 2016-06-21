@@ -26,13 +26,13 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using NpgsqlTypes;
 using System;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
 using System.Resources;
-using NpgsqlTypes;
 
 #if WITHDESIGN
 using Npgsql.Design;
@@ -54,6 +54,7 @@ namespace Npgsql
 
         // Fields to implement IDbDataParameter interface.
         private byte precision = 0;
+
         private byte scale = 0;
         private Int32 size = 0;
 
@@ -61,6 +62,7 @@ namespace Npgsql
         //private NpgsqlDbType                    npgsqldb_type = NpgsqlDbType.Text;
         //private DbType                    db_type = DbType.String;
         private NpgsqlNativeTypeInfo type_info;
+
         private NpgsqlBackendTypeInfo backendTypeInfo;
         private ParameterDirection direction = ParameterDirection.Input;
         private Boolean is_nullable = false;
@@ -120,7 +122,6 @@ namespace Npgsql
             {
                 throw new InvalidCastException(String.Format(resman.GetString("Exception_ImpossibleToCast"), value.GetType()));
             }*/
-
         }
 
         /// <summary>
@@ -136,7 +137,6 @@ namespace Npgsql
                 bound = false;
             }
         }
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Npgsql.NpgsqlParameter">NpgsqlParameter</see>
@@ -311,7 +311,6 @@ namespace Npgsql
         {
             get
             {
-
                 // Prevents casts to be added for null values when they aren't needed.
                 if (!useCast && (value == DBNull.Value || value == null))
                     return false;
@@ -390,7 +389,6 @@ namespace Npgsql
             } // [TODO] Validate data type.
             set
             {
-
                 NpgsqlEventLog.LogPropertySet(LogLevel.Normal, CLASSNAME, "DbType", value);
 
                 useCast = value != DbType.Object;
@@ -542,7 +540,6 @@ namespace Npgsql
                     return name.Length > 1 ? name.Substring(1) : string.Empty;
                 }
                 return name;
-
             }
         }
 
@@ -601,7 +598,6 @@ namespace Npgsql
         {
             get
             {
-
                 return this.value;
 
                 /*
@@ -617,7 +613,6 @@ namespace Npgsql
 
                 throw new NotSupportedException();
                 */
-
             } // [TODO] Check and validate data type.
             set
             {
@@ -647,7 +642,6 @@ namespace Npgsql
                 if (backendTypeInfo == null && !NpgsqlTypesHelper.TryGetBackendTypeInfo(type_info.Name, out backendTypeInfo))
                 {
                     throw new InvalidCastException(String.Format(resman.GetString("Exception_ImpossibleToCast"), value.GetType()));
-
                 }
                 else
                 {
@@ -656,7 +650,6 @@ namespace Npgsql
 
                     bound = false;
                 }
-
             }
         }
 

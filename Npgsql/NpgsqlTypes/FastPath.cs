@@ -30,11 +30,11 @@
 -------------------------------------------------------------------------
 */
 
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using Npgsql;
 
 namespace NpgsqlTypes
 {
@@ -145,7 +145,7 @@ namespace NpgsqlTypes
 
                 while (!l_endQuery)
                 {
-                    c = (Char) stream.ReadByte();
+                    c = (Char)stream.ReadByte();
 
                     switch (c)
                     {
@@ -157,14 +157,14 @@ namespace NpgsqlTypes
                             String param = PGUtil.ReadString(stream);
 
                             break;
-                            //------------------------------
-                            // Error message returned
+                        //------------------------------
+                        // Error message returned
                         case 'E':
                             NpgsqlError e = new NpgsqlError(stream);
                             throw new NpgsqlException(e.ToString());
 
-                            //------------------------------
-                            // Notice from backend
+                        //------------------------------
+                        // Notice from backend
                         case 'N':
                             Int32 l_nlen = PGUtil.ReadInt32(stream);
 
@@ -218,7 +218,7 @@ namespace NpgsqlTypes
                                 throw new NpgsqlException("Received Z");
                             }
                             //TODO: handle transaction status
-                            Char l_tStatus = (Char) stream.ReadByte();
+                            Char l_tStatus = (Char)stream.ReadByte();
                             l_endQuery = true;
                             break;
 
@@ -261,7 +261,7 @@ namespace NpgsqlTypes
         /// <returns>Integer result.</returns>
         public Int32 GetInteger(String name, FastpathArg[] args)
         {
-            Int32 i = (Int32) FastpathCall(name, true, args);
+            Int32 i = (Int32)FastpathCall(name, true, args);
 
             return i;
         }
@@ -274,7 +274,7 @@ namespace NpgsqlTypes
         /// <returns>Array containing result</returns>
         public Byte[] GetData(String name, FastpathArg[] args)
         {
-            return (Byte[]) FastpathCall(name, false, args);
+            return (Byte[])FastpathCall(name, false, args);
         }
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace NpgsqlTypes
         {
             while (rs.Read())
             {
-                String key = (String) rs[0];
+                String key = (String)rs[0];
                 if (!func.ContainsKey(key))
                 {
                     func.Add(key, Int32.Parse(rs[1].ToString()));

@@ -31,7 +31,6 @@ using System.Data;
 using System.Data.Common;
 using System.Reflection;
 using System.Resources;
-using System.Text;
 using System.Threading;
 
 namespace Npgsql
@@ -191,7 +190,6 @@ namespace Npgsql
         /// </summary>
         public void Rollback(String savePointName)
         {
-
             CheckDisposed();
 
             if (_conn == null)
@@ -207,7 +205,6 @@ namespace Npgsql
             if (savePointName.Contains(";"))
             {
                 throw new InvalidOperationException(resman.GetString("Exception_SavePointWithSemicolon"));
-
             }
 
             NpgsqlCommand.ExecuteBlindSuppressTimeout(_conn.Connector, string.Format("ROLLBACK TO SAVEPOINT {0}", savePointName));
@@ -218,7 +215,6 @@ namespace Npgsql
         /// </summary>
         public void Save(String savePointName)
         {
-
             CheckDisposed();
 
             if (_conn == null)
@@ -234,11 +230,9 @@ namespace Npgsql
             if (savePointName.Contains(";"))
             {
                 throw new InvalidOperationException(resman.GetString("Exception_SavePointWithSemicolon"));
-
             }
 
             NpgsqlCommand.ExecuteBlind(_conn.Connector, string.Format("SAVEPOINT {0}", savePointName));
-
         }
 
         /// <summary>

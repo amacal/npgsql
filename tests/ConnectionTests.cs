@@ -21,13 +21,13 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-using System;
 using Npgsql;
+using NpgsqlTypes;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Resources;
-using NUnit.Framework;
-using System.Collections.Generic;
-using NpgsqlTypes;
 
 namespace NpgsqlTests
 {
@@ -205,7 +205,7 @@ namespace NpgsqlTests
                     }
                     finally
                     {
-                        openedConnections.ForEach(delegate(NpgsqlConnection con) { con.Dispose(); });
+                        openedConnections.ForEach(delegate (NpgsqlConnection con) { con.Dispose(); });
                         openedConnections.Clear();
                     }
                 }
@@ -233,7 +233,7 @@ namespace NpgsqlTests
             }
             finally
             {
-                openedConnections.ForEach(delegate(NpgsqlConnection con) { con.Dispose(); });
+                openedConnections.ForEach(delegate (NpgsqlConnection con) { con.Dispose(); });
                 NpgsqlConnection.ClearAllPools();
             }
         }
@@ -285,7 +285,6 @@ namespace NpgsqlTests
         [Test]
         public void Bug1011241_DiscardAll()
         {
-
             var connection = new NpgsqlConnection(ConnectionString + ";SearchPath=public");
             connection.Open();
 
@@ -308,7 +307,6 @@ namespace NpgsqlTests
                 Assert.AreEqual("public", command.ExecuteScalar());
             }
             connection.Close();
-
         }
 
         [Test]
@@ -375,7 +373,7 @@ namespace NpgsqlTests
                 var stateChangeCalledForOpen = false;
                 var stateChangeCalledForClose = false;
 
-                c.StateChange += new StateChangeEventHandler(delegate(object sender, StateChangeEventArgs e)
+                c.StateChange += new StateChangeEventHandler(delegate (object sender, StateChangeEventArgs e)
                 {
                     if (e.OriginalState == ConnectionState.Closed && e.CurrentState == ConnectionState.Open)
                         stateChangeCalledForOpen = true;
@@ -419,7 +417,6 @@ namespace NpgsqlTests
         [Test]
         public void CheckExtraFloatingDigitsHigherThanTwo()
         {
-
             using (NpgsqlCommand c = new NpgsqlCommand("show extra_float_digits", Conn))
             {
                 string extraDigits = (string)c.ExecuteScalar();
@@ -434,7 +431,6 @@ namespace NpgsqlTests
             }
         }
 
-
         [Test]
         public void GetConnectionState()
         {
@@ -444,9 +440,6 @@ namespace NpgsqlTests
             c.Dispose();
 
             Assert.AreEqual(ConnectionState.Closed, c.State);
-
-
-
         }
 
         [Test]
@@ -456,7 +449,6 @@ namespace NpgsqlTests
             NpgsqlConnectionStringBuilder builder = new NpgsqlConnectionStringBuilder();
             builder.ApplicationName = "test";
         }
-
 
         [Test]
         public void GetSchema()

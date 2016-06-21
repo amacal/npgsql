@@ -31,16 +31,17 @@ namespace Npgsql
     internal interface INpgsqlResourceManager
     {
         void Enlist(INpgsqlTransactionCallbacks transactionCallbacks, byte[] txToken);
+
         byte[] Promote(INpgsqlTransactionCallbacks transactionCallbacks);
+
         void CommitWork(string txName);
+
         void RollbackWork(string txName);
     }
 
     internal class NpgsqlResourceManager : MarshalByRefObject, INpgsqlResourceManager
     {
         private readonly Dictionary<string, CommittableTransaction> _transactions = new Dictionary<string, CommittableTransaction>();
-
-        #region INpgsqlTransactionManager Members
 
         public byte[] Promote(INpgsqlTransactionCallbacks callbacks)
         {
@@ -81,8 +82,6 @@ namespace Npgsql
             }
         }
 
-        #endregion
-
         private class DurableResourceManager : ISinglePhaseNotification
         {
             private CommittableTransaction _tx;
@@ -116,8 +115,6 @@ namespace Npgsql
                 }
             }
 
-            #region IEnlistmentNotification Members
-
             public void Commit(Enlistment enlistment)
             {
                 _callbacks.CommitTransaction();
@@ -147,18 +144,12 @@ namespace Npgsql
                 _callbacks.Dispose();
             }
 
-            #endregion
-
-            #region ISinglePhaseNotification Members
-
             public void SinglePhaseCommit(SinglePhaseEnlistment singlePhaseEnlistment)
             {
                 _callbacks.CommitTransaction();
                 singlePhaseEnlistment.Committed();
                 _callbacks.Dispose();
             }
-
-            #endregion
 
             private static readonly Guid rmGuid = new Guid("9e1b6d2d-8cdb-40ce-ac37-edfe5f880716");
 

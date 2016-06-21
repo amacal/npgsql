@@ -11,13 +11,13 @@
 // documentation for any purpose, without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
 // and this paragraph and the following two paragraphs appear in all copies.
-// 
+//
 // IN NO EVENT SHALL THE NPGSQL DEVELOPMENT TEAM BE LIABLE TO ANY PARTY
 // FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
 // INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
 // DOCUMENTATION, EVEN IF THE NPGSQL DEVELOPMENT TEAM HAS BEEN ADVISED OF
 // THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 // THE NPGSQL DEVELOPMENT TEAM SPECIFICALLY DISCLAIMS ANY WARRANTIES,
 // INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
 // AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS
@@ -27,14 +27,12 @@
 // This file provides data type converters between PostgreSQL representations
 // and .NET objects.
 
+using Npgsql;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
-using Npgsql;
 
 namespace NpgsqlTypes
 {
@@ -114,11 +112,11 @@ namespace NpgsqlTypes
                 hashValue |= 1 << 3;
             }
 
-            if (! useConformantStrings)
+            if (!useConformantStrings)
             {
                 hashValue ^= 1 << 2;
 
-                if (! supports_E_StringPrefix)
+                if (!supports_E_StringPrefix)
                 {
                     hashValue ^= 1 << 1;
                 }
@@ -173,18 +171,17 @@ namespace NpgsqlTypes
             {
                 switch (ch)
                 {
-                    case '\'' :
+                    case '\'':
                         retQuotedEscaped.Append(encodingInfo.SingleQuoteEscape);
                         break;
 
-                    case '\"' :
+                    case '\"':
                         retQuotedEscaped.Append(encodingInfo.DoubleQuoteEscape);
                         break;
 
-                    case '\\' :
+                    case '\\':
                         retQuotedEscaped.Append(encodingInfo.BackSlashEscape);
                         break;
-
                 }
 
                 retQuotedEscaped.Append(ch);
@@ -221,7 +218,7 @@ namespace NpgsqlTypes
                 )
             ];
 
-            if (! options.SupportsHexByteFormat)
+            if (!options.SupportsHexByteFormat)
             {
                 return ByteArrayToByteaTextEscaped((byte[])NativeData, encodingInfo);
             }
@@ -467,8 +464,9 @@ namespace NpgsqlTypes
             //to happen.
             if (!arrayElement)
             {
-                var asFloat = (float) NativeData;
-                if (float.IsNaN(asFloat)) {
+                var asFloat = (float)NativeData;
+                if (float.IsNaN(asFloat))
+                {
                     return ASCIIByteArrays.NAN_QUOTED;
                 }
                 if (float.IsPositiveInfinity(asFloat))
@@ -492,13 +490,16 @@ namespace NpgsqlTypes
             if (!arrayElement)
             {
                 var asDouble = (double)NativeData;
-                if (double.IsNaN(asDouble)) {
+                if (double.IsNaN(asDouble))
+                {
                     return ASCIIByteArrays.NAN_QUOTED;
                 }
-                if (double.IsPositiveInfinity(asDouble)) {
+                if (double.IsPositiveInfinity(asDouble))
+                {
                     return ASCIIByteArrays.INFINITY_QUOTED;
                 }
-                if (double.IsNegativeInfinity(asDouble)) {
+                if (double.IsNegativeInfinity(asDouble))
+                {
                     return ASCIIByteArrays.NEG_INFINITY_QUOTED;
                 }
             }
@@ -598,9 +599,7 @@ namespace NpgsqlTypes
             finally
             {
                 B = null;
-
             }
-
         }
 
         /// <summary>
@@ -649,7 +648,6 @@ namespace NpgsqlTypes
                 return BackendEncoding.UTF8Encoding.GetBytes(((NpgsqlInet)NativeData).ToString());
             }
             return BackendEncoding.UTF8Encoding.GetBytes(NativeData.ToString());
-
         }
 
         /// <summary>

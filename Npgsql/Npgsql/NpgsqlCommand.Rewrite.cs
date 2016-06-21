@@ -26,17 +26,13 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.IO;
-using System.Reflection;
-using System.Resources;
 using System.Text;
-using System.Text.RegularExpressions;
-using NpgsqlTypes;
 
 namespace Npgsql
 {
@@ -176,13 +172,14 @@ namespace Npgsql
 
             PGUtil.WriteString(st, " AS (");
 
-            for (int i = 0 ; i < Parameters.Count ; i++)
+            for (int i = 0; i < Parameters.Count; i++)
             {
                 var p = Parameters[i];
 
-                switch(p.Direction)
+                switch (p.Direction)
                 {
-                    case ParameterDirection.Output: case ParameterDirection.InputOutput:
+                    case ParameterDirection.Output:
+                    case ParameterDirection.InputOutput:
                         if (isFirstOutputOrInputOutput)
                         {
                             isFirstOutputOrInputOutput = false;
@@ -349,7 +346,7 @@ namespace Npgsql
         {
             bool first = true;
 
-            for (int i = 0 ; i < parameters.Count ; i++)
+            for (int i = 0; i < parameters.Count; i++)
             {
                 NpgsqlParameter parameter = parameters[i];
 
@@ -459,7 +456,7 @@ namespace Npgsql
             {
                 paramOrdinalMap = new Dictionary<NpgsqlParameter, int>();
 
-                for (int i = 0 ; i < parameters.Count ; i++)
+                for (int i = 0; i < parameters.Count; i++)
                 {
                     paramOrdinalMap[parameters[i]] = i + 1;
                 }
@@ -471,29 +468,29 @@ namespace Npgsql
                 return true;
             }
 
-        None:
+            None:
             if (currCharOfs >= end)
             {
                 goto Finish;
             }
             lastChar = ch;
             ch = src[currCharOfs++];
-        NoneContinue:
+            NoneContinue:
             for (; ; lastChar = ch, ch = src[currCharOfs++])
             {
                 switch (ch)
                 {
-                    case '/':                                           goto BlockCommentBegin;
-                    case '-':                                           goto LineCommentBegin;
-                    case '\'': if (standardConformantStrings)           goto Quoted;                else goto Escaped;
-                    case '$':  if (!IsIdentifier(lastChar))             goto DollarQuotedStart;     else break;
-                    case '"':                                           goto DoubleQuoted;
-                    case ':':  if (lastChar != ':')                     goto ParamStart;            else break;
-                    case '@':  if (lastChar != '@')                     goto ParamStart;            else break;
-                    case ';':  if (!allowMultipleStatements)            goto SemiColon;             else break;
+                    case '/': goto BlockCommentBegin;
+                    case '-': goto LineCommentBegin;
+                    case '\'': if (standardConformantStrings) goto Quoted; else goto Escaped;
+                    case '$': if (!IsIdentifier(lastChar)) goto DollarQuotedStart; else break;
+                    case '"': goto DoubleQuoted;
+                    case ':': if (lastChar != ':') goto ParamStart; else break;
+                    case '@': if (lastChar != '@') goto ParamStart; else break;
+                    case ';': if (!allowMultipleStatements) goto SemiColon; else break;
 
                     case 'e':
-                    case 'E':  if (!IsLetter(lastChar))                 goto EscapedStart;          else break;
+                    case 'E': if (!IsLetter(lastChar)) goto EscapedStart; else break;
                 }
 
                 if (currCharOfs >= end)
@@ -501,8 +498,8 @@ namespace Npgsql
                     goto Finish;
                 }
             }
-            
-        ParamStart:
+
+            ParamStart:
             if (currCharOfs < end)
             {
                 lastChar = ch;
@@ -524,9 +521,9 @@ namespace Npgsql
             }
             goto Finish;
 
-        Param:
+            Param:
             // We have already at least one character of the param name
-            for (; ; )
+            for (;;)
             {
                 lastChar = ch;
                 if (currCharOfs >= end || !IsParamNameChar(ch = src[currCharOfs]))
@@ -564,7 +561,7 @@ namespace Npgsql
                 }
             }
 
-        Quoted:
+            Quoted:
             while (currCharOfs < end)
             {
                 if (src[currCharOfs++] == '\'')
@@ -575,7 +572,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        DoubleQuoted:
+            DoubleQuoted:
             while (currCharOfs < end)
             {
                 if (src[currCharOfs++] == '"')
@@ -586,7 +583,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        EscapedStart:
+            EscapedStart:
             if (currCharOfs < end)
             {
                 lastChar = ch;
@@ -599,7 +596,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        Escaped:
+            Escaped:
             while (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -618,7 +615,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        MaybeConcatenatedEscaped:
+            MaybeConcatenatedEscaped:
             while (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -634,7 +631,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        MaybeConcatenatedEscaped2:
+            MaybeConcatenatedEscaped2:
             while (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -655,7 +652,6 @@ namespace Npgsql
                     }
                     lastChar = '\0';
                     goto NoneContinue;
-
                 }
                 if (ch != ' ' && ch != '\t' && ch != '\n' & ch != '\r' && ch != '\f')
                 {
@@ -665,7 +661,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        MaybeConcatenatedEscapeAfterComment:
+            MaybeConcatenatedEscapeAfterComment:
             while (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -676,7 +672,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        DollarQuotedStart:
+            DollarQuotedStart:
             if (currCharOfs < end)
             {
                 ch = src[currCharOfs];
@@ -699,7 +695,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        DollarQuotedInFirstDelim:
+            DollarQuotedInFirstDelim:
             while (currCharOfs < end)
             {
                 lastChar = ch;
@@ -716,7 +712,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        DollarQuoted:
+            DollarQuoted:
             {
                 string tag = src.Substring(dollarTagStart - 1, dollarTagEnd - dollarTagStart + 2);
                 int pos = src.IndexOf(tag, dollarTagEnd + 1); // Not linear time complexity, but that's probably not a problem, since PostgreSQL backend's isn't either
@@ -730,7 +726,7 @@ namespace Npgsql
                 goto None;
             }
 
-        LineCommentBegin:
+            LineCommentBegin:
             if (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -743,7 +739,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        LineComment:
+            LineComment:
             while (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -754,7 +750,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        BlockCommentBegin:
+            BlockCommentBegin:
             while (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -775,7 +771,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        BlockComment:
+            BlockComment:
             while (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -790,7 +786,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        BlockCommentEnd:
+            BlockCommentEnd:
             while (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -809,7 +805,7 @@ namespace Npgsql
             }
             goto Finish;
 
-        SemiColon:
+            SemiColon:
             while (currCharOfs < end)
             {
                 ch = src[currCharOfs++];
@@ -820,7 +816,7 @@ namespace Npgsql
             }
             // implicit goto Finish
 
-        Finish:
+            Finish:
             dest.WriteString(src.Substring(currTokenBeg, end - currTokenBeg));
             return true;
         }
@@ -833,11 +829,11 @@ namespace Npgsql
 
             result.WriteString("EXECUTE {0}", planName);
 
-            if(parameters.Count != 0)
+            if (parameters.Count != 0)
             {
                 result.WriteByte((byte)ASCIIBytes.ParenLeft);
 
-                for (int i = 0 ; i < Parameters.Count ; i++)
+                for (int i = 0; i < Parameters.Count; i++)
                 {
                     var p = Parameters[i];
 

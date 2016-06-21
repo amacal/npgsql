@@ -76,9 +76,8 @@ namespace Npgsql
             return new NpgsqlConnectionStringBuilder();
         }
 
-        #region IServiceProvider Members
-
-        public object GetService(Type serviceType) {
+        public object GetService(Type serviceType)
+        {
             // In legacy Entity Framework, this is the entry point for obtaining Npgsql's
             // implementation of DbProviderServices. We use reflection for all types to
             // avoid any dependencies on EF stuff in this project.
@@ -93,9 +92,12 @@ namespace Npgsql
                 var assemblyName = typeof(NpgsqlFactory).Assembly.GetName();
                 assemblyName.Name = "Npgsql.EntityFrameworkLegacy";
                 Assembly npgsqlEfAssembly;
-                try {
+                try
+                {
                     npgsqlEfAssembly = Assembly.Load(assemblyName.FullName);
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     throw new Exception("Could not load Npgsql.EntityFrameworkLegacy assembly, is it installed?", e);
                 }
 
@@ -111,8 +113,6 @@ namespace Npgsql
         }
 
         private static object _legacyEntityFrameworkServices;
-
-        #endregion
     }
 }
 

@@ -123,7 +123,7 @@ namespace Npgsql
             /// Schema name: if the error was associated with a specific database object,
             /// the name of the schema containing that object, if any.
             /// </summary>
-            SchemaName =  (byte)'s',
+            SchemaName = (byte)'s',
 
             /// <summary>
             /// Table name: if the error was associated with a specific table, the name of the table.
@@ -248,6 +248,7 @@ namespace Npgsql
         {
             get { return _internalQuery; }
         }
+
         /// <summary>
         /// Trace back information.  PostgreSQL 7.4 and up.
         /// </summary>
@@ -359,7 +360,7 @@ namespace Npgsql
             // "FATA" string, which would mean a protocol 2.0 error string.
             if (PGUtil.ReadInt32(stream) == 1178686529)
             {
-                string[] v2Parts = ("FATA" + PGUtil.ReadString(stream)).Split(new char[] {':'}, 2);
+                string[] v2Parts = ("FATA" + PGUtil.ReadString(stream)).Split(new char[] { ':' }, 2);
                 if (v2Parts.Length == 2)
                 {
                     _severity = v2Parts[0].Trim();
@@ -376,89 +377,106 @@ namespace Npgsql
                 bool done = false;
                 int fieldCode;
 
-                while (! done && (fieldCode = stream.ReadByte()) != -1)
+                while (!done && (fieldCode = stream.ReadByte()) != -1)
                 {
                     switch ((byte)fieldCode)
                     {
-                        case 0 :
+                        case 0:
                             // Null terminator; error message fully consumed.
                             done = true;
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.Severity :
+
+                        case (byte)ErrorFieldTypeCodes.Severity:
                             _severity = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.Code :
+
+                        case (byte)ErrorFieldTypeCodes.Code:
                             _code = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.Message :
+
+                        case (byte)ErrorFieldTypeCodes.Message:
                             _message = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.Detail :
+
+                        case (byte)ErrorFieldTypeCodes.Detail:
                             _detail = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.Hint :
+
+                        case (byte)ErrorFieldTypeCodes.Hint:
                             _hint = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.Position :
+
+                        case (byte)ErrorFieldTypeCodes.Position:
                             _position = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.InternalPosition :
+
+                        case (byte)ErrorFieldTypeCodes.InternalPosition:
                             _internalPosition = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.InternalQuery :
+
+                        case (byte)ErrorFieldTypeCodes.InternalQuery:
                             _internalQuery = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.Where :
+
+                        case (byte)ErrorFieldTypeCodes.Where:
                             _where = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.File :
+
+                        case (byte)ErrorFieldTypeCodes.File:
                             _file = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.Line :
+
+                        case (byte)ErrorFieldTypeCodes.Line:
                             _line = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.Routine :
+
+                        case (byte)ErrorFieldTypeCodes.Routine:
                             _routine = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.SchemaName :
+
+                        case (byte)ErrorFieldTypeCodes.SchemaName:
                             _schemaName = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.TableName :
+
+                        case (byte)ErrorFieldTypeCodes.TableName:
                             _tableName = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.ColumnName :
+
+                        case (byte)ErrorFieldTypeCodes.ColumnName:
                             _columnName = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.DataTypeName :
+
+                        case (byte)ErrorFieldTypeCodes.DataTypeName:
                             _datatypeName = PGUtil.ReadString(stream);
                             ;
                             break;
-                        case (byte)ErrorFieldTypeCodes.ConstraintName :
+
+                        case (byte)ErrorFieldTypeCodes.ConstraintName:
                             _constraintName = PGUtil.ReadString(stream);
                             ;
                             break;
+
                         default:
                             // Unknown error field; consume and discard.
                             PGUtil.ReadString(stream);
                             ;
                             break;
-
                     }
                 }
             }

@@ -28,15 +28,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.IO;
-using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.Text.RegularExpressions;
-using NpgsqlTypes;
 
 namespace Npgsql
 {
@@ -105,34 +99,33 @@ namespace Npgsql
             // Optimize for a few common timeout values.
             switch (timeout)
             {
-                case 10 :
+                case 10:
                     query = NpgsqlQuery.SetStmtTimeout10Sec;
                     break;
 
-                case 20 :
+                case 20:
                     query = NpgsqlQuery.SetStmtTimeout20Sec;
                     break;
 
-                case 30 :
+                case 30:
                     query = NpgsqlQuery.SetStmtTimeout30Sec;
                     break;
 
-                case 60 :
+                case 60:
                     query = NpgsqlQuery.SetStmtTimeout60Sec;
                     break;
 
-                case 90 :
+                case 90:
                     query = NpgsqlQuery.SetStmtTimeout90Sec;
                     break;
 
-                case 120 :
+                case 120:
                     query = NpgsqlQuery.SetStmtTimeout120Sec;
                     break;
 
-                default :
+                default:
                     query = new NpgsqlQuery(string.Format("SET statement_timeout = {0}", timeout * 1000));
                     break;
-
             }
 
             // Write the Query message to the wire.
@@ -380,7 +373,7 @@ namespace Npgsql
 
                 for (Int32 i = 0; i < parameters.Count; i++)
                 {
-                    if (! bindAll && parameters[i].Bound)
+                    if (!bindAll && parameters[i].Bound)
                     {
                         continue;
                     }
@@ -390,9 +383,12 @@ namespace Npgsql
                     bound = true;
                     parameters[i].Bound = true;
 
-                    if (parameterValues[i] == null) {
-                        parameterFormatCodes[i]= (Int16)FormatCode.Binary;
-                    } else {
+                    if (parameterValues[i] == null)
+                    {
+                        parameterFormatCodes[i] = (Int16)FormatCode.Binary;
+                    }
+                    else
+                    {
                         parameterFormatCodes[i] = parameters[i].TypeInfo.SupportsBinaryBackendData ? (Int16)FormatCode.Binary : (Int16)FormatCode.Text;
                     }
                 }

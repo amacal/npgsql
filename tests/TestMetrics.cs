@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 
 namespace NpgsqlTests
@@ -57,7 +55,7 @@ namespace NpgsqlTests
         /// </summary>
         public void Stop()
         {
-            if (! running)
+            if (!running)
             {
                 return;
             }

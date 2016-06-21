@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using Npgsql;
+﻿using Npgsql;
 using NUnit.Framework;
+using System.Data;
 
 namespace NpgsqlTests
 {
@@ -17,21 +13,23 @@ namespace NpgsqlTests
         [Test]
         public void FunctionInOutParameters()
         {
-            ExecuteNonQuery(@"CREATE OR REPLACE FUNCTION pg_temp.func(OUT param1 int, INOUT param2 int) RETURNS record AS 
+            ExecuteNonQuery(@"CREATE OR REPLACE FUNCTION pg_temp.func(OUT param1 int, INOUT param2 int) RETURNS record AS
                               '
                               BEGIN
                                       param1 = 1;
-                                      param2 = param2 + 1; 
+                                      param2 = param2 + 1;
                               END;
                               ' LANGUAGE 'plpgsql';");
 
             var cmd = new NpgsqlCommand(@"pg_temp.func", Conn);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add(new NpgsqlParameter("param1", DbType.Int32) {
-              Direction = ParameterDirection.Output
+            cmd.Parameters.Add(new NpgsqlParameter("param1", DbType.Int32)
+            {
+                Direction = ParameterDirection.Output
             });
-            cmd.Parameters.Add(new NpgsqlParameter("param2", DbType.Int32) {
+            cmd.Parameters.Add(new NpgsqlParameter("param2", DbType.Int32)
+            {
                 Direction = ParameterDirection.InputOutput,
                 Value = 5
             });
@@ -49,7 +47,7 @@ namespace NpgsqlTests
         public void DeriveParametersVarious()
         {
             // This function returns record because of the two Out (InOut & Out) parameters
-            ExecuteNonQuery(@"CREATE OR REPLACE FUNCTION pg_temp.func(IN param1 INT, OUT param2 text, INOUT param3 INT) RETURNS record AS 
+            ExecuteNonQuery(@"CREATE OR REPLACE FUNCTION pg_temp.func(IN param1 INT, OUT param2 text, INOUT param3 INT) RETURNS record AS
                               '
                               BEGIN
                                       param2 = ''sometext'';
@@ -76,7 +74,7 @@ namespace NpgsqlTests
         public void DeriveParametersInOnly()
         {
             // This function returns record because of the two Out (InOut & Out) parameters
-            ExecuteNonQuery(@"CREATE OR REPLACE FUNCTION pg_temp.func(IN param1 INT, IN param2 INT) RETURNS int AS 
+            ExecuteNonQuery(@"CREATE OR REPLACE FUNCTION pg_temp.func(IN param1 INT, IN param2 INT) RETURNS int AS
                               '
                               BEGIN
                                 RETURN param1 + param2;
@@ -98,7 +96,7 @@ namespace NpgsqlTests
         public void DeriveParametersNoParams()
         {
             // This function returns record because of the two Out (InOut & Out) parameters
-            ExecuteNonQuery(@"CREATE OR REPLACE FUNCTION pg_temp.func() RETURNS int AS 
+            ExecuteNonQuery(@"CREATE OR REPLACE FUNCTION pg_temp.func() RETURNS int AS
                               '
                               BEGIN
                                 RETURN 4;

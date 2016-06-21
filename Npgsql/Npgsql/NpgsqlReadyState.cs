@@ -25,7 +25,6 @@
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -91,7 +90,7 @@ namespace Npgsql
             try
             {
                 stream
-                    .WriteBytes((byte) FrontEndMessageCode.Termination)
+                    .WriteBytes((byte)FrontEndMessageCode.Termination)
                     .WriteInt32(4)
                     .Flush();
             }

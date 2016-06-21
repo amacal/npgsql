@@ -39,6 +39,6 @@ namespace Npgsql
 
         private NpgsqlSync()
         : base(FrontEndMessageCode.Sync)
-        {}
+        { }
     }
 }

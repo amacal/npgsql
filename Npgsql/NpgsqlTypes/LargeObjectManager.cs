@@ -31,10 +31,10 @@
 -------------------------------------------------------------------------
 */
 
+using Npgsql;
 using System;
 using System.Data;
 using System.Text;
-using Npgsql;
 
 namespace NpgsqlTypes
 {
@@ -174,6 +174,7 @@ namespace NpgsqlTypes
          * @return oid of new object
          * @exception NpgsqlException on error
          */
+
         /// <summary>
         /// This creates a large object, returning its OID.
         /// </summary>

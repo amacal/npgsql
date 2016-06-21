@@ -145,7 +145,7 @@ namespace Npgsql
             //base.OnRowUpdated(value);
             if ((RowUpdated != null) && (value is NpgsqlRowUpdatedEventArgs))
             {
-                RowUpdated(this, (NpgsqlRowUpdatedEventArgs) value);
+                RowUpdated(this, (NpgsqlRowUpdatedEventArgs)value);
             }
         }
 
@@ -158,7 +158,7 @@ namespace Npgsql
             NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "OnRowUpdating");
             if ((RowUpdating != null) && (value is NpgsqlRowUpdatingEventArgs))
             {
-                RowUpdating(this, (NpgsqlRowUpdatingEventArgs) value);
+                RowUpdating(this, (NpgsqlRowUpdatingEventArgs)value);
             }
         }
 

@@ -44,10 +44,12 @@ namespace Npgsql
         /// Don't log at all
         /// </summary>
         None = 0,
+
         /// <summary>
         /// Only log the most common issues
         /// </summary>
         Normal = 1,
+
         /// <summary>
         /// Log everything
         /// </summary>
@@ -61,6 +63,7 @@ namespace Npgsql
     {
         // Logging related values
         public static LogLevel Level { get; set; }
+
         private static readonly String CLASSNAME = MethodBase.GetCurrentMethod().DeclaringType.Name;
         private static String logfile;
         private static Boolean echomessages;
@@ -150,7 +153,6 @@ namespace Npgsql
                     writer.Close();
                 }
             }
-
         }
 
         /// <summary>
@@ -345,17 +347,20 @@ namespace Npgsql
                         String.Format(LogResMan.GetString("Method_4P_Enter"), ClassName, MethodName, MethodParameters[0],
                                       MethodParameters[1], MethodParameters[2], MethodParameters[3]);
                     break;
+
                 case 5:
                     message =
                         String.Format(LogResMan.GetString("Method_5P_Enter"), ClassName, MethodName, MethodParameters[0],
                                       MethodParameters[1], MethodParameters[2], MethodParameters[3], MethodParameters[4]);
                     break;
+
                 case 6:
                     message =
                         String.Format(LogResMan.GetString("Method_6P_Enter"), ClassName, MethodName, MethodParameters[0],
                                       MethodParameters[1], MethodParameters[2], MethodParameters[3], MethodParameters[4],
                                       MethodParameters[5]);
                     break;
+
                 default:
                     // should always be true - but who knows ;-)
                     if (MethodParameters.Length > 6)

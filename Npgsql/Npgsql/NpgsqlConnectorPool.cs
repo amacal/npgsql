@@ -187,7 +187,6 @@ namespace Npgsql
 
             while (Connector == null && timeoutMilliseconds > 0)
             {
-
                 Int32 ST = timeoutMilliseconds > 1000 ? 1000 : timeoutMilliseconds;
 
                 Thread.Sleep(ST);
@@ -231,7 +230,6 @@ namespace Npgsql
             {
                 // Connection sharing? What's that?
                 throw new NotImplementedException("Internal: Shared pooling not implemented");
-
             }
             Connector = GetPooledConnector(Connection);
 
@@ -329,11 +327,9 @@ namespace Npgsql
 
                 lock (locker)
                 {
-
                     // Try to find a queue.
                     if (!PooledConnectors.TryGetValue(Connection.ConnectionString, out Queue))
                     {
-
                         Queue = new ConnectorQueue();
                         Queue.ConnectionLifeTime = Connection.ConnectionLifeTime;
                         Queue.MinPoolSize = Connection.MinPoolSize;
@@ -354,7 +350,6 @@ namespace Npgsql
                         Queue.Busy.Add(Connector, null);
                     }
                 }
-
             } while (Connector != null && !Connector.IsValid());
 
             if (Connector != null) return Connector;
@@ -370,7 +365,6 @@ namespace Npgsql
 
             if (Connector != null)
             {
-
                 Connector.ProvideClientCertificatesCallback += Connection.ProvideClientCertificatesCallbackDelegate;
                 Connector.CertificateSelectionCallback += Connection.CertificateSelectionCallbackDelegate;
                 Connector.CertificateValidationCallback += Connection.CertificateValidationCallbackDelegate;
@@ -396,10 +390,8 @@ namespace Npgsql
                 // Meet the MinPoolSize requirement if needed.
                 if (Connection.MinPoolSize > 1)
                 {
-
                     lock (Queue)
                     {
-
                         while (Queue.Available.Count + Queue.Busy.Count < Connection.MinPoolSize)
                         {
                             NpgsqlConnector Spare = new NpgsqlConnector(Connection);
@@ -520,7 +512,6 @@ namespace Npgsql
                         inQueue = false;
                         Connector.Close();
                     }
-
                 }
                 else
                 {
@@ -543,7 +534,6 @@ namespace Npgsql
                 {
                     queue.Busy.Remove(Connector);
                 }
-
         }
 
         /*

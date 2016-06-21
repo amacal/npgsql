@@ -1,10 +1,9 @@
-using System;
-using System.Data;
-using System.Reflection;
-using System.Transactions;
 using Npgsql;
 using NpgsqlTypes;
 using NUnit.Framework;
+using System;
+using System.Data;
+using System.Transactions;
 
 namespace NpgsqlTests
 {
@@ -84,7 +83,7 @@ namespace NpgsqlTests
                     object result = command.ExecuteNonQuery();
                     Assert.AreEqual(1, result);
 
-                    field_serial1 = (int) new NpgsqlCommand("select max(field_serial) from data", connection).ExecuteScalar();
+                    field_serial1 = (int)new NpgsqlCommand("select max(field_serial) from data", connection).ExecuteScalar();
                     var command2 = new NpgsqlCommand("select field_text from data where field_serial = (select max(field_serial) from data)", connection);
                     result = command2.ExecuteScalar();
                     Assert.AreEqual("test", result);
@@ -100,8 +99,8 @@ namespace NpgsqlTests
                     Object result = command.ExecuteNonQuery();
                     Assert.AreEqual(1, result);
 
-                    field_serial2 = (int) new NpgsqlCommand("select max(field_serial) from data", connection).ExecuteScalar();
-                    var command2 = new NpgsqlCommand( "select field_int4 from data where field_serial = (select max(field_serial) from data)", connection);
+                    field_serial2 = (int)new NpgsqlCommand("select max(field_serial) from data", connection).ExecuteScalar();
+                    var command2 = new NpgsqlCommand("select field_int4 from data where field_serial = (select max(field_serial) from data)", connection);
                     result = command2.ExecuteScalar();
                     Assert.AreEqual(5, result);
 
@@ -207,8 +206,6 @@ namespace NpgsqlTests
             }
         }
 
-        #region Setup
-
         [SetUp]
         public void CheckPromotableSupport()
         {
@@ -225,14 +222,15 @@ namespace NpgsqlTests
             }
         }
 
-        class FakePromotableSinglePhaseNotification : IPromotableSinglePhaseNotification
+        private class FakePromotableSinglePhaseNotification : IPromotableSinglePhaseNotification
         {
             public byte[] Promote() { return null; }
-            public void Initialize() {}
-            public void SinglePhaseCommit(SinglePhaseEnlistment singlePhaseEnlistment) {}
-            public void Rollback(SinglePhaseEnlistment singlePhaseEnlistment) {}
-        }
 
-        #endregion
+            public void Initialize() { }
+
+            public void SinglePhaseCommit(SinglePhaseEnlistment singlePhaseEnlistment) { }
+
+            public void Rollback(SinglePhaseEnlistment singlePhaseEnlistment) { }
+        }
     }
 }

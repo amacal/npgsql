@@ -143,7 +143,7 @@ namespace Npgsql
                 _cmd.ExecuteNonQuery();
                 _disposeCopyStream = _copyStream == null;
                 _copyStream = _context.Mediator.CopyStream;
-                if (_copyStream == null && ! (_context.CurrentState is NpgsqlReadyState))
+                if (_copyStream == null && !(_context.CurrentState is NpgsqlReadyState))
                 {
                     throw new NpgsqlException("Not a COPY IN query: " + _cmd.CommandText);
                 }

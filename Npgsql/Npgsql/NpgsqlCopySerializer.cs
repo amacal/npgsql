@@ -25,9 +25,8 @@
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 using System;
-using System.IO;
-using System.Text;
 using System.Globalization;
+using System.IO;
 
 namespace Npgsql
 {
@@ -352,7 +351,7 @@ namespace Npgsql
             {
                 if (_stringsToEscape == null)
                 {
-                    _stringsToEscape = new String[] {Delimiter, Separator, Escape, "\r", "\n"};
+                    _stringsToEscape = new String[] { Delimiter, Separator, Escape, "\r", "\n" };
                 }
                 return _stringsToEscape;
             }
@@ -393,32 +392,32 @@ namespace Npgsql
         {
             switch (c)
             {
-                case '\t' :
-                    return  esc_t;
+                case '\t':
+                    return esc_t;
 
-                case '\n' :
+                case '\n':
                     return esc_n;
 
-                case '\r' :
+                case '\r':
                     return esc_r;
 
-                case '\b' :
+                case '\b':
                     return esc_b;
 
-                case '\f' :
+                case '\f':
                     return esc_f;
 
-                case '\v' :
+                case '\v':
                     return esc_v;
 
-                default :
+                default:
                     if (c < 32 || c > 127)
                     {
-                        return new byte[] {(byte) ('0' + ((c/64) & 7)), (byte) ('0' + ((c/8) & 7)), (byte) ('0' + (c & 7))};
+                        return new byte[] { (byte)('0' + ((c / 64) & 7)), (byte)('0' + ((c / 8) & 7)), (byte)('0' + (c & 7)) };
                     }
                     else
                     {
-                        return new byte[] {(byte) c};
+                        return new byte[] { (byte)c };
                     }
             }
         }
@@ -476,7 +475,7 @@ namespace Npgsql
                     AddNull();
                 }
             }
-            if (_context == null || ! _context.CurrentState.CopyFormat.IsBinary)
+            if (_context == null || !_context.CurrentState.CopyFormat.IsBinary)
             {
                 AddBytes(SeparatorBytes);
             }
@@ -565,10 +564,10 @@ namespace Npgsql
                 // some, possibly all of fieldValue string does not require escaping and can be buffered for output
                 if (escapeAt > bufferedUpto)
                 {
-//                    int encodedLength = BackendEncoding.UTF8Encoding.GetByteCount(fieldValue.ToCharArray(bufferedUpto, escapeAt));
-//                    MakeRoomForBytes(encodedLength);
-//                    _sendBufferAt += BackendEncoding.UTF8Encoding.GetBytes(fieldValue, bufferedUpto, escapeAt, _sendBuffer, _sendBufferAt);
-//                    bufferedUpto = escapeAt;
+                    //                    int encodedLength = BackendEncoding.UTF8Encoding.GetByteCount(fieldValue.ToCharArray(bufferedUpto, escapeAt));
+                    //                    MakeRoomForBytes(encodedLength);
+                    //                    _sendBufferAt += BackendEncoding.UTF8Encoding.GetBytes(fieldValue, bufferedUpto, escapeAt, _sendBuffer, _sendBufferAt);
+                    //                    bufferedUpto = escapeAt;
                     int encodedLength = BackendEncoding.UTF8Encoding.GetByteCount(fieldValue.ToCharArray(bufferedUpto, escapeAt - bufferedUpto));
                     MakeRoomForBytes(encodedLength);
                     _sendBufferAt += BackendEncoding.UTF8Encoding.GetBytes(fieldValue, bufferedUpto, escapeAt - bufferedUpto, _sendBuffer, _sendBufferAt);

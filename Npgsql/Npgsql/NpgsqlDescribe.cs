@@ -28,7 +28,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 
 namespace Npgsql
 {
@@ -76,7 +75,7 @@ namespace Npgsql
     {
         public NpgsqlDescribeStatement(String statementName)
         : base(DescribeTypeCode.Statement, statementName)
-        {}
+        { }
     }
 
     /// <summary>
@@ -88,6 +87,6 @@ namespace Npgsql
     {
         public NpgsqlDescribePortal(String portalName)
         : base(DescribeTypeCode.Portal, portalName)
-        {}
+        { }
     }
 }

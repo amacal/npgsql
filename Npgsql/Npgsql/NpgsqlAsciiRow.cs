@@ -26,10 +26,10 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using NpgsqlTypes;
 using System;
 using System.Data;
 using System.IO;
-using NpgsqlTypes;
 
 namespace Npgsql
 {

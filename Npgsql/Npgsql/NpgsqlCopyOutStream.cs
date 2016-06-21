@@ -143,7 +143,7 @@ namespace Npgsql
         /// </summary>
         public override int Read(byte[] buf, int off, int len)
         {
-            if (! IsActive)
+            if (!IsActive)
             {
                 throw new ObjectDisposedException("Reading from closed " + this);
             }

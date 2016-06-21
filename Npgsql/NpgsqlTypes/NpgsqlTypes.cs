@@ -27,12 +27,12 @@
 // This file provides implementations of PostgreSQL specific data types that cannot
 // be mapped to standard .NET classes.
 
+using Npgsql;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
-using Npgsql;
 
 // Keep the xml comment warning quiet for this file.
 #pragma warning disable 1591
@@ -86,7 +86,7 @@ namespace NpgsqlTypes
 
         public override bool Equals(object obj)
         {
-            return obj != null && obj is NpgsqlPoint && Equals((NpgsqlPoint) obj);
+            return obj != null && obj is NpgsqlPoint && Equals((NpgsqlPoint)obj);
         }
 
         public static bool operator ==(NpgsqlPoint x, NpgsqlPoint y)
@@ -101,13 +101,12 @@ namespace NpgsqlTypes
 
         public override int GetHashCode()
         {
-            return X.GetHashCode() ^ PGUtil.RotateShift(Y.GetHashCode(), sizeof (int)/2);
+            return X.GetHashCode() ^ PGUtil.RotateShift(Y.GetHashCode(), sizeof(int) / 2);
         }
     }
 
     public struct NpgsqlBox : IEquatable<NpgsqlBox>
     {
-
         private NpgsqlPoint _upperRight;
         private NpgsqlPoint _lowerLeft;
 
@@ -133,7 +132,6 @@ namespace NpgsqlTypes
             {
                 _upperRight = value;
             }
-
         }
 
         public NpgsqlPoint LowerLeft
@@ -147,7 +145,6 @@ namespace NpgsqlTypes
             {
                 _lowerLeft = value;
             }
-
         }
 
         public float Left
@@ -192,7 +189,7 @@ namespace NpgsqlTypes
 
         public override bool Equals(object obj)
         {
-            return obj != null && obj is NpgsqlBox && Equals((NpgsqlBox) obj);
+            return obj != null && obj is NpgsqlBox && Equals((NpgsqlBox)obj);
         }
 
         public static bool operator ==(NpgsqlBox x, NpgsqlBox y)
@@ -208,9 +205,9 @@ namespace NpgsqlTypes
         public override int GetHashCode()
         {
             return
-                Top.GetHashCode() ^ PGUtil.RotateShift(Right.GetHashCode(), sizeof (int)/4) ^
-                PGUtil.RotateShift(Bottom.GetHashCode(), sizeof (int)/2) ^
-                PGUtil.RotateShift(LowerLeft.GetHashCode(), sizeof (int)*3/4);
+                Top.GetHashCode() ^ PGUtil.RotateShift(Right.GetHashCode(), sizeof(int) / 4) ^
+                PGUtil.RotateShift(Bottom.GetHashCode(), sizeof(int) / 2) ^
+                PGUtil.RotateShift(LowerLeft.GetHashCode(), sizeof(int) * 3 / 4);
         }
     }
 
@@ -236,8 +233,8 @@ namespace NpgsqlTypes
         public override int GetHashCode()
         {
             return
-                Start.X.GetHashCode() ^ PGUtil.RotateShift(Start.Y.GetHashCode(), sizeof (int)/4) ^
-                PGUtil.RotateShift(End.X.GetHashCode(), sizeof (int)/2) ^ PGUtil.RotateShift(End.Y.GetHashCode(), sizeof (int)*3/4);
+                Start.X.GetHashCode() ^ PGUtil.RotateShift(Start.Y.GetHashCode(), sizeof(int) / 4) ^
+                PGUtil.RotateShift(End.X.GetHashCode(), sizeof(int) / 2) ^ PGUtil.RotateShift(End.Y.GetHashCode(), sizeof(int) * 3 / 4);
         }
 
         public bool Equals(NpgsqlLSeg other)
@@ -247,7 +244,7 @@ namespace NpgsqlTypes
 
         public override bool Equals(object obj)
         {
-            return obj != null && obj is NpgsqlLSeg && Equals((NpgsqlLSeg) obj);
+            return obj != null && obj is NpgsqlLSeg && Equals((NpgsqlLSeg)obj);
         }
 
         public static bool operator ==(NpgsqlLSeg x, NpgsqlLSeg y)
@@ -384,7 +381,7 @@ namespace NpgsqlTypes
         {
             if (Open != other.Open || Count != other.Count)
                 return false;
-            else if(ReferenceEquals(_points, other._points))//Short cut for shallow copies.
+            else if (ReferenceEquals(_points, other._points))//Short cut for shallow copies.
                 return true;
             for (int i = 0; i != Count; ++i)
             {
@@ -398,7 +395,7 @@ namespace NpgsqlTypes
 
         public override bool Equals(object obj)
         {
-            return obj != null && obj is NpgsqlPath && Equals((NpgsqlPath) obj);
+            return obj != null && obj is NpgsqlPath && Equals((NpgsqlPath)obj);
         }
 
         public static bool operator ==(NpgsqlPath x, NpgsqlPath y)
@@ -419,7 +416,7 @@ namespace NpgsqlTypes
                 //The ideal amount to shift each value is one that would evenly spread it throughout
                 //the resultant bytes. Using the current result % 32 is essentially using a random value
                 //but one that will be the same on subsequent calls.
-                ret ^= PGUtil.RotateShift(point.GetHashCode(), ret%sizeof (int));
+                ret ^= PGUtil.RotateShift(point.GetHashCode(), ret % sizeof(int));
             }
             return Open ? ret : -ret;
         }
@@ -437,7 +434,7 @@ namespace NpgsqlTypes
             _points = new List<NpgsqlPoint>(points);
         }
 
-        public NpgsqlPolygon(NpgsqlPoint[] points) : this ((IEnumerable<NpgsqlPoint>) points)
+        public NpgsqlPolygon(NpgsqlPoint[] points) : this((IEnumerable<NpgsqlPoint>)points)
         {
         }
 
@@ -511,7 +508,7 @@ namespace NpgsqlTypes
         {
             if (Count != other.Count)
                 return false;
-            else if(ReferenceEquals(_points, _points))//Shortcut for copies of each other.
+            else if (ReferenceEquals(_points, _points))//Shortcut for copies of each other.
                 return true;
             for (int i = 0; i != Count; ++i)
             {
@@ -525,7 +522,7 @@ namespace NpgsqlTypes
 
         public override bool Equals(object obj)
         {
-            return obj is NpgsqlPolygon && Equals((NpgsqlPolygon) obj);
+            return obj is NpgsqlPolygon && Equals((NpgsqlPolygon)obj);
         }
 
         public static bool operator ==(NpgsqlPolygon x, NpgsqlPolygon y)
@@ -546,7 +543,7 @@ namespace NpgsqlTypes
                 //The ideal amount to shift each value is one that would evenly spread it throughout
                 //the resultant bytes. Using the current result % 32 is essentially using a random value
                 //but one that will be the same on subsequent calls.
-                ret ^= PGUtil.RotateShift(point.GetHashCode(), ret%sizeof (int));
+                ret ^= PGUtil.RotateShift(point.GetHashCode(), ret % sizeof(int));
             }
             return ret;
         }
@@ -573,7 +570,7 @@ namespace NpgsqlTypes
 
         public override bool Equals(object obj)
         {
-            return obj is NpgsqlCircle && Equals((NpgsqlCircle) obj);
+            return obj is NpgsqlCircle && Equals((NpgsqlCircle)obj);
         }
 
         public override String ToString()
@@ -594,8 +591,8 @@ namespace NpgsqlTypes
         public override int GetHashCode()
         {
             return
-                Center.X.GetHashCode() ^ PGUtil.RotateShift(Center.Y.GetHashCode(), sizeof (int)/4) ^
-                PGUtil.RotateShift(Radius.GetHashCode(), sizeof (int)/2);
+                Center.X.GetHashCode() ^ PGUtil.RotateShift(Center.Y.GetHashCode(), sizeof(int) / 4) ^
+                PGUtil.RotateShift(Radius.GetHashCode(), sizeof(int) / 2);
         }
     }
 
@@ -644,8 +641,7 @@ namespace NpgsqlTypes
             {
                 return string.Format("{0}/{1}", addr, mask);
             }
-                return addr.ToString();
-
+            return addr.ToString();
         }
 
         public static explicit operator IPAddress(NpgsqlInet x)
@@ -654,14 +650,12 @@ namespace NpgsqlTypes
             {
                 throw new InvalidCastException("Cannot cast CIDR network to address");
             }
-                return x.addr;
-
+            return x.addr;
         }
 
         public static implicit operator NpgsqlInet(IPAddress ipaddress)
         {
             return new NpgsqlInet(ipaddress);
-
         }
 
         public bool Equals(NpgsqlInet other)
@@ -671,12 +665,12 @@ namespace NpgsqlTypes
 
         public override bool Equals(object obj)
         {
-            return obj != null && obj is NpgsqlInet && Equals((NpgsqlInet) obj);
+            return obj != null && obj is NpgsqlInet && Equals((NpgsqlInet)obj);
         }
 
         public override int GetHashCode()
         {
-            return PGUtil.RotateShift(addr.GetHashCode(), mask%32);
+            return PGUtil.RotateShift(addr.GetHashCode(), mask % 32);
         }
 
         public static bool operator ==(NpgsqlInet x, NpgsqlInet y)

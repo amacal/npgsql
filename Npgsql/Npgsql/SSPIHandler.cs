@@ -1,9 +1,8 @@
 #if WINDOWS && UNMANAGED
 
 using System;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace Npgsql
 {
@@ -12,15 +11,13 @@ namespace Npgsql
     /// </summary>
     internal class SSPIHandler : IDisposable
     {
-        #region constants and structs
-
         private const int SECBUFFER_VERSION = 0;
         private const int SECBUFFER_TOKEN = 2;
         private const int SEC_E_OK = 0x00000000;
         private const int SEC_I_CONTINUE_NEEDED = 0x00090312;
-        private const int ISC_REQ_ALLOCATE_MEMORY=0x00000100;
-        private const int SECURITY_NETWORK_DREP=0x00000000;
-        private const int SECPKG_CRED_OUTBOUND=0x00000002;
+        private const int ISC_REQ_ALLOCATE_MEMORY = 0x00000100;
+        private const int SECURITY_NETWORK_DREP = 0x00000000;
+        private const int SECPKG_CRED_OUTBOUND = 0x00000002;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct SecHandle
@@ -48,10 +45,6 @@ namespace Npgsql
             public IntPtr pBuffer;
         }
 
-        #endregion
-
-        #region p/invoke methods
-
         [DllImport("Secur32.dll")]
         private extern static int AcquireCredentialsHandle(
             string pszPrincipal,
@@ -65,8 +58,8 @@ namespace Npgsql
             out SecHandle ptsExpiry
         );
 
-        [DllImport("secur32", CharSet=CharSet.Auto, SetLastError=true)]
-        static extern int InitializeSecurityContext(
+        [DllImport("secur32", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int InitializeSecurityContext(
             ref SecHandle phCredential,
             ref SecHandle phContext,
             string pszTargetName,
@@ -80,8 +73,8 @@ namespace Npgsql
             out int pfContextAttr,
             out SecHandle ptsExpiry);
 
-        [DllImport("secur32", CharSet=CharSet.Auto, SetLastError=true)]
-        static extern int InitializeSecurityContext(
+        [DllImport("secur32", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int InitializeSecurityContext(
             ref SecHandle phCredential,
             IntPtr phContext,
             string pszTargetName,
@@ -109,8 +102,6 @@ namespace Npgsql
         private extern static int DeleteSecurityContext(
             ref SecHandle phContext
         );
-
-        #endregion
 
         private bool disposed;
         private string sspitarget;
@@ -176,13 +167,13 @@ namespace Npgsql
                     InBuffer.pvBuffer = Marshal.AllocHGlobal(authData.Length);
                     try
                     {
-                    Marshal.Copy(authData, 0, InBuffer.pvBuffer, authData.Length);
-                    InBuffer.cbBuffer = authData.Length;
-                    InBuffer.BufferType = SECBUFFER_TOKEN;
-                    inbuf.ulVersion = SECBUFFER_VERSION;
-                    inbuf.cBuffers = 1;
-                    inbuf.pBuffer = Marshal.AllocHGlobal(Marshal.SizeOf(InBuffer));
-                    Marshal.StructureToPtr(InBuffer, inbuf.pBuffer, false);
+                        Marshal.Copy(authData, 0, InBuffer.pvBuffer, authData.Length);
+                        InBuffer.cbBuffer = authData.Length;
+                        InBuffer.BufferType = SECBUFFER_TOKEN;
+                        inbuf.ulVersion = SECBUFFER_VERSION;
+                        inbuf.cBuffers = 1;
+                        inbuf.pBuffer = Marshal.AllocHGlobal(Marshal.SizeOf(InBuffer));
+                        Marshal.StructureToPtr(InBuffer, inbuf.pBuffer, false);
                         status = InitializeSecurityContext(
                             ref sspicred,
                             ref sspictx,
@@ -272,8 +263,6 @@ namespace Npgsql
             }
         }
 
-        #region resource cleanup
-
         private void FreeHandles()
         {
             if (sspictx_set)
@@ -305,8 +294,6 @@ namespace Npgsql
                 disposed = true;
             }
         }
-
-        #endregion
     }
 }
 

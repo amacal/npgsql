@@ -27,16 +27,12 @@
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Reflection;
 using System.Resources;
-using System.Text;
-using System.Text.RegularExpressions;
-using NpgsqlTypes;
 
 #if WITHDESIGN
 
@@ -56,12 +52,15 @@ namespace Npgsql
     {
         // Logging related values
         private static readonly String CLASSNAME = MethodBase.GetCurrentMethod().DeclaringType.Name;
+
         private static readonly ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType);
 
         private NpgsqlConnection connection;
         private NpgsqlConnector m_Connector; //renamed to account for hiding it in a local function
+
         //if all locals were named with this prefix, it would solve LOTS of issues.
         private NpgsqlTransaction transaction;
+
         private String commandText;
         private Int32 timeout;
         private CommandType commandType;
@@ -70,6 +69,7 @@ namespace Npgsql
         private Boolean designTimeVisible;
 
         private PrepareStatus _prepareStatus = PrepareStatus.NotPrepared;
+
         /// <summary>
         /// For prepared commands, captures the connection's <see cref="NpgsqlConnection.OpenCounter"/>
         /// at the time the command was prepared. This allows us to know whether the connection was
@@ -86,6 +86,7 @@ namespace Npgsql
 
         // locals about function support so we don`t need to check it everytime a function is called.
         private Boolean functionChecksDone = false;
+
         private Boolean functionNeedsColumnListDefinition = false; // Functions don't return record by default.
 
         private Boolean commandTimeoutSet = false;
@@ -106,23 +107,23 @@ namespace Npgsql
             Array paramNameCharTable;
 
             // Table has lower bound of (int)'.';
-            paramNameCharTable = Array.CreateInstance(typeof(byte), new int[] {'z' - '.' + 1}, new int[] {'.'});
+            paramNameCharTable = Array.CreateInstance(typeof(byte), new int[] { 'z' - '.' + 1 }, new int[] { '.' });
 
             paramNameCharTable.SetValue((byte)'.', (int)'.');
 
-            for (int i = '0' ; i <= '9' ; i++)
+            for (int i = '0'; i <= '9'; i++)
             {
                 paramNameCharTable.SetValue((byte)i, i);
             }
 
-            for (int i = 'A' ; i <= 'Z' ; i++)
+            for (int i = 'A'; i <= 'Z'; i++)
             {
                 paramNameCharTable.SetValue((byte)i, i);
             }
 
             paramNameCharTable.SetValue((byte)'_', (int)'_');
 
-            for (int i = 'a' ; i <= 'z' ; i++)
+            for (int i = 'a'; i <= 'z'; i++)
             {
                 paramNameCharTable.SetValue((byte)i, i);
             }
@@ -246,7 +247,6 @@ namespace Npgsql
                 NpgsqlEventLog.LogPropertySet(LogLevel.Debug, CLASSNAME, "CommandTimeout", value);
 
                 commandTimeoutSet = true;
-
             }
         }
 
@@ -431,13 +431,14 @@ namespace Npgsql
             {
                 switch (value)
                 {
-                        // validate value (required based on base type contract)
+                    // validate value (required based on base type contract)
                     case UpdateRowSource.None:
                     case UpdateRowSource.OutputParameters:
                     case UpdateRowSource.FirstReturnedRecord:
                     case UpdateRowSource.Both:
                         updateRowSource = value;
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -463,16 +464,18 @@ namespace Npgsql
                 {
                     case PrepareStatus.NotPrepared:
                         return false;
+
                     case PrepareStatus.NeedsPrepare:
                     case PrepareStatus.Prepared:
                         return true;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
         }
 
-        PrepareStatus PrepareStatus
+        private PrepareStatus PrepareStatus
         {
             get
             {
@@ -483,10 +486,12 @@ namespace Npgsql
                         return _prepareStatus;
 
                     case PrepareStatus.Prepared:
-                        if (connection == null || connection.Connector == null || Connection.State != ConnectionState.Open || _prepareConnectionOpenId != connection.OpenCounter) {
+                        if (connection == null || connection.Connector == null || Connection.State != ConnectionState.Open || _prepareConnectionOpenId != connection.OpenCounter)
+                        {
                             _prepareStatus = PrepareStatus.NotPrepared;
                         }
                         return _prepareStatus;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -494,7 +499,8 @@ namespace Npgsql
             set
             {
                 _prepareStatus = value;
-                if (_prepareStatus == PrepareStatus.Prepared) {
+                if (_prepareStatus == PrepareStatus.Prepared)
+                {
                     _prepareConnectionOpenId = connection.OpenCounter;
                 }
             }
@@ -637,7 +643,7 @@ namespace Npgsql
         }
     }
 
-    enum PrepareStatus
+    internal enum PrepareStatus
     {
         NotPrepared,
         NeedsPrepare,

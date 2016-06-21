@@ -26,13 +26,13 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Resources;
 using System.Text;
-using NpgsqlTypes;
 
 namespace Npgsql
 {
@@ -44,9 +44,13 @@ namespace Npgsql
         protected static readonly ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType);
         public abstract object this[int index] { get; }
         public abstract int NumFields { get; }
+
         public abstract bool IsDBNull(int index);
+
         public abstract void Dispose();
+
         public abstract long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length);
+
         public abstract long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length);
     }
 
@@ -88,7 +92,7 @@ namespace Npgsql
 
         public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
-            byte[] source = (byte[]) this[i];
+            byte[] source = (byte[])this[i];
             if (buffer == null)
             {
                 return source.Length - fieldOffset;
@@ -100,7 +104,7 @@ namespace Npgsql
 
         public override long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
-            string source = (string) this[i];
+            string source = (string)this[i];
             if (buffer == null)
             {
                 return source.Length - fieldoffset;
@@ -123,6 +127,7 @@ namespace Npgsql
         /// been read yet
         /// </summary>
         private int _i;
+
         private readonly RowReader _reader;
 
         public ForwardsOnlyRow(RowReader reader)
@@ -132,7 +137,8 @@ namespace Npgsql
 
         private void Seek(int index, bool consume)
         {
-            if (index < 0 || index >= NumFields) {
+            if (index < 0 || index >= NumFields)
+            {
                 throw new IndexOutOfRangeException();
             }
 
@@ -143,7 +149,7 @@ namespace Npgsql
             if (d > 0)
             {
                 _reader.Skip(d);
-                _i += d;                
+                _i += d;
             }
             if (consume)
                 _i++;
@@ -254,6 +260,7 @@ namespace Npgsql
             }
 
             public abstract int DoRead(T[] output, int outputIdx, int length);
+
             public abstract int DoSkip(int length);
 
             public int Read(T[] output, int outputIdx, int length)
@@ -274,7 +281,7 @@ namespace Npgsql
                 {
                     throw new InvalidOperationException();
                 }
-                Skip((int) position - AlreadyRead);
+                Skip((int)position - AlreadyRead);
             }
         }
 
@@ -356,14 +363,14 @@ namespace Npgsql
 
         public bool CanGetByteStream(int index)
         {
-//TODO: Add support for byte[] being read as a stream of bytes.
+            //TODO: Add support for byte[] being read as a stream of bytes.
             return _rowDesc[index].TypeInfo.NpgsqlDbType == NpgsqlDbType.Bytea;
         }
 
         public bool CanGetCharStream(int index)
         {
-//TODO: Add support for arrays of string types?
-            return _rowDesc[index].TypeInfo.Type.Equals(typeof (string));
+            //TODO: Add support for arrays of string types?
+            return _rowDesc[index].TypeInfo.Type.Equals(typeof(string));
         }
 
         protected Streamer<byte> CurrentByteStreamer
@@ -446,6 +453,7 @@ namespace Npgsql
         }
 
         public abstract bool IsNull { get; }
+
         protected abstract void SkipOne();
 
         public void Skip(int count)
@@ -487,6 +495,6 @@ namespace Npgsql
         }
 
         public virtual void Dispose()
-        {}
+        { }
     }
 }

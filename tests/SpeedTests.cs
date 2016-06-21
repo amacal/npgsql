@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Npgsql;
+using NpgsqlTypes;
+using NUnit.Framework;
+using System;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.IO;
-using NUnit.Framework;
-
-using Npgsql;
-using NpgsqlTypes;
 
 namespace NpgsqlTests
 {
@@ -62,7 +58,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         dataParameter.Value = "yo";
                         command.ExecuteScalar();
@@ -90,7 +86,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         dataParameter.Value = "yo";
                         command.ExecuteScalar();
@@ -116,7 +112,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         if (prepare)
                         {
@@ -150,7 +146,7 @@ namespace NpgsqlTests
                 command.CommandText = "SELECT :data";
 
                 byte[] data = new byte[100000];
-                for (int i = 0  ; i < data.Length ; i++)
+                for (int i = 0; i < data.Length; i++)
                 {
                     data[i] = (byte)(i % 255);
                 }
@@ -168,7 +164,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         var data2 = (byte[])command.ExecuteScalar();
                         metrics.IncrementIterations();
@@ -212,7 +208,7 @@ namespace NpgsqlTests
                 command.CommandType = CommandType.Text;
                 command.CommandText = "SELECT :data1, :data2, :data3, :data4, :data5, :data6, :data7, :data8, :data9, :data10";
 
-                for (int i = 0 ; i < 10 ; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     NpgsqlParameter dataParameter = command.CreateParameter();
                     dataParameter.Direction = ParameterDirection.Input;
@@ -229,7 +225,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         using (IDataReader r = command.ExecuteReader())
                         {
@@ -279,7 +275,7 @@ namespace NpgsqlTests
 
                 Int64[] data = new Int64[1000];
 
-                for (int i = 0 ; i < 1000 ; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     data[i] = (Int64)i + 0xFFFFFFFFFFFFFFF;
                 }
@@ -298,7 +294,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         command.ExecuteScalar();
                         metrics.IncrementIterations();
@@ -344,7 +340,7 @@ namespace NpgsqlTests
 
                 string[] data = new string[1000];
 
-                for (int i = 0 ; i < 1000 ; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     data[i] = string.Format("A string with the number {0}, a ', a \", and a \\.", i);
                 }
@@ -363,7 +359,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         try
                         {
@@ -423,7 +419,7 @@ namespace NpgsqlTests
                 command.CommandText = "SELECT :data";
 
                 byte[] bytes = new byte[50000];
-                for (int i = 0  ; i < bytes.Length ; i++)
+                for (int i = 0; i < bytes.Length; i++)
                 {
                     bytes[i] = (byte)(i % 255);
                 }
@@ -443,7 +439,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         try
                         {
@@ -504,7 +500,7 @@ namespace NpgsqlTests
 
                 decimal[] data = new decimal[1000];
 
-                for (int i = 0 ; i < 1000 ; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     data[i] = i;
                 }
@@ -523,7 +519,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         command.ExecuteScalar();
                         metrics.IncrementIterations();
@@ -553,7 +549,7 @@ namespace NpgsqlTests
 
                 decimal[] data = new decimal[1000];
 
-                for (int i = 0 ; i < 1000 ; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     data[i] = i;
                 }
@@ -572,7 +568,7 @@ namespace NpgsqlTests
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         command.ExecuteScalar();
                         metrics.IncrementIterations();
@@ -642,14 +638,14 @@ namespace NpgsqlTests
 
                 command.CommandText = sql.ToString();
 
-                for (int i = 0 ; i < 20 ; i++)
+                for (int i = 0; i < 20; i++)
                 {
                     command.Parameters.AddWithValue(string.Format("p{0:00}", i + 1), NpgsqlDbType.Text, string.Format("String parameter value {0}", i + 1));
                 }
 
                 using (var metrics = TestMetrics.Start(TestRunTime, true))
                 {
-                    while (! metrics.TimesUp)
+                    while (!metrics.TimesUp)
                     {
                         command.Prepare();
                         metrics.IncrementIterations();
@@ -733,8 +729,6 @@ namespace NpgsqlTests
             }
         }
 
-        #region Setup / Teardown / Utils
-
         private Stopwatch _watch;
 
         [SetUp]
@@ -750,9 +744,7 @@ namespace NpgsqlTests
         public void Teardown()
         {
             _watch.Stop();
-            Console.WriteLine("Total test running time: {0}ms",  _watch.ElapsedMilliseconds);
+            Console.WriteLine("Total test running time: {0}ms", _watch.ElapsedMilliseconds);
         }
-
-        #endregion
     }
 }

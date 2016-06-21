@@ -1,8 +1,7 @@
 using System;
-using System.Runtime.CompilerServices;
-using System.Security;
 using System.Reflection;
 using System.Resources;
+using System.Security;
 
 // Contains assembly attributes shared by all Npgsql projects
 

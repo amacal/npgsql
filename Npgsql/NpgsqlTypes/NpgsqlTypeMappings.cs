@@ -27,14 +27,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.IO;
-using Npgsql;
 
 namespace NpgsqlTypes
 {

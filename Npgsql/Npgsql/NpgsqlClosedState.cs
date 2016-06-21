@@ -25,23 +25,21 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using Mono.Security.Protocol.Tls;
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Threading;
-using Mono.Security.Protocol.Tls;
-using SecurityProtocolType=Mono.Security.Protocol.Tls.SecurityProtocolType;
 using System.Security.Cryptography.X509Certificates;
+using SecurityProtocolType = Mono.Security.Protocol.Tls.SecurityProtocolType;
 
 namespace Npgsql
 {
-
     internal class NpgsqlNetworkStream : NetworkStream
     {
-        NpgsqlConnector mContext = null;
+        private NpgsqlConnector mContext = null;
 
         public NpgsqlNetworkStream(Socket socket, Boolean owner)
             : base(socket, owner)
@@ -65,9 +63,7 @@ namespace Npgsql
             }
 
             base.Dispose(disposing);
-
         }
-
     }
 
     internal sealed class NpgsqlClosedState : NpgsqlState
@@ -119,7 +115,7 @@ namespace Npgsql
                 // try every ip address of the given hostname, use the first reachable one
                 // make sure not to exceed the caller's timeout expectation by splitting the
                 // time we have left between all the remaining ip's in the list.
-                for (int i = 0 ; i < ips.Length ; i++)
+                for (int i = 0; i < ips.Length; i++)
                 {
                     NpgsqlEventLog.LogMsg(resman, "Log_ConnectingTo", LogLevel.Debug, ips[i]);
 
@@ -170,7 +166,7 @@ namespace Npgsql
                         .WriteInt32(80877103);
 
                     // Receive response
-                    Char response = (Char) baseStream.ReadByte();
+                    Char response = (Char)baseStream.ReadByte();
 
                     if (response == 'S')
                     {

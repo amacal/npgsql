@@ -24,7 +24,6 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-using System;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -124,7 +123,7 @@ namespace Npgsql
             databases.Locale = CultureInfo.InvariantCulture;
 
             databases.Columns.AddRange(
-                new DataColumn[] {new DataColumn("database_name"), new DataColumn("owner"), new DataColumn("encoding")});
+                new DataColumn[] { new DataColumn("database_name"), new DataColumn("owner"), new DataColumn("encoding") });
 
             StringBuilder getDatabases = new StringBuilder();
 
@@ -175,7 +174,6 @@ namespace Npgsql
             }
 
             return schemata;
-
         }
 
         /// <summary>
@@ -300,7 +298,7 @@ namespace Npgsql
             DataTable users = new DataTable("Users");
             users.Locale = CultureInfo.InvariantCulture;
 
-            users.Columns.AddRange(new DataColumn[] {new DataColumn("user_name"), new DataColumn("user_sysid", typeof (int))});
+            users.Columns.AddRange(new DataColumn[] { new DataColumn("user_name"), new DataColumn("user_sysid", typeof(int)) });
 
             StringBuilder getUsers = new StringBuilder();
 
@@ -506,7 +504,7 @@ and n.nspname not in ('pg_catalog', 'pg_toast')");
         {
             DataTable table = new DataTable("ReservedWords");
             table.Locale = CultureInfo.InvariantCulture;
-            table.Columns.Add("ReservedWord", typeof (string));
+            table.Columns.Add("ReservedWord", typeof(string));
             // List of keywords taken from PostgreSQL 9.0 reserved words documentation.
             string[] keywords = new[]
             {

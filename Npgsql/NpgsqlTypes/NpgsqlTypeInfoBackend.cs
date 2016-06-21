@@ -24,17 +24,10 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using Npgsql;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.IO;
-using Npgsql;
 
 namespace NpgsqlTypes
 {
@@ -43,6 +36,7 @@ namespace NpgsqlTypes
     /// </summary>
     internal delegate Object ConvertBackendTextToNativeHandler(
         NpgsqlBackendTypeInfo TypeInfo, byte[] BackendData, Int16 TypeSize, Int32 TypeModifier);
+
     /// <summary>
     /// Delegate called to convert the given backend binary data to its native representation.
     /// </summary>
@@ -174,7 +168,7 @@ namespace NpgsqlTypes
         /// </summary>
         public bool SupportsBinaryBackendData
         {
-            get { return (! NpgsqlTypesHelper.SuppressBinaryBackendEncoding && _ConvertBackendBinaryToNative != null); }
+            get { return (!NpgsqlTypesHelper.SuppressBinaryBackendEncoding && _ConvertBackendBinaryToNative != null); }
         }
 
         /// <summary>
@@ -186,7 +180,7 @@ namespace NpgsqlTypes
         /// <param name="TypeModifier">Type modifier field sent from the backend.</param>
         public Object ConvertBackendBinaryToNative(Byte[] BackendData, Int32 fieldValueSize, Int32 TypeModifier)
         {
-            if (! NpgsqlTypesHelper.SuppressBinaryBackendEncoding && _ConvertBackendBinaryToNative != null)
+            if (!NpgsqlTypesHelper.SuppressBinaryBackendEncoding && _ConvertBackendBinaryToNative != null)
             {
                 return _ConvertBackendBinaryToNative(this, BackendData, fieldValueSize, TypeModifier);
             }
@@ -252,13 +246,12 @@ namespace NpgsqlTypes
             {
                 return frameworkValue;
             }
-            else if (_convertFrameworkToProvider!= null)
+            else if (_convertFrameworkToProvider != null)
             {
                 return _convertFrameworkToProvider(frameworkValue);
             }
 
             return frameworkValue;
         }
-
     }
 }

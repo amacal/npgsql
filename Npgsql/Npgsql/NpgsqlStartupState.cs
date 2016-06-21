@@ -25,7 +25,6 @@
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 using System;
-using System.IO;
 using System.Reflection;
 
 namespace Npgsql

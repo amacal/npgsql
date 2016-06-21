@@ -31,8 +31,11 @@ namespace Npgsql
     internal interface INpgsqlTransactionCallbacks : IDisposable
     {
         string GetName();
+
         void PrepareTransaction();
+
         void CommitTransaction();
+
         void RollbackTransaction();
     }
 
@@ -75,8 +78,6 @@ namespace Npgsql
                 return _connection;
             }
         }
-
-        #region INpgsqlTransactionCallbacks Members
 
         public string GetName()
         {
@@ -124,10 +125,6 @@ namespace Npgsql
             }
         }
 
-        #endregion
-
-        #region IDisposable Members
-
         public void Dispose()
         {
             if (_closeConnectionRequired)
@@ -136,7 +133,5 @@ namespace Npgsql
             }
             _closeConnectionRequired = false;
         }
-
-        #endregion
     }
 }

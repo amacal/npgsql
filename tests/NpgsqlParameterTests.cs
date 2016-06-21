@@ -31,15 +31,11 @@
 
 #define NET_2_0
 
-using System;
-using System.Data;
-using System.Data.Common;
-using System.IO;
-using System.Xml;
 using Npgsql;
 using NpgsqlTypes;
-
 using NUnit.Framework;
+using System;
+using System.Data;
 
 namespace NpgsqlTests
 {
@@ -64,7 +60,6 @@ namespace NpgsqlTests
             Assert.AreEqual(0, c1.Parameters.Count);
             Assert.AreEqual(1, c2.Parameters.Count);
         }
-
 
         [Test]
         public void Constructor1()
@@ -166,7 +161,7 @@ namespace NpgsqlTests
         [Test]
         public void Constructor2_Value_Null()
         {
-            var p = new NpgsqlParameter("address", (Object) null);
+            var p = new NpgsqlParameter("address", (Object)null);
             Assert.AreEqual(DbType.String, p.DbType, "A:DbType");
             Assert.AreEqual(ParameterDirection.Input, p.Direction, "A:Direction");
             Assert.IsFalse(p.IsNullable, "A:IsNullable");
@@ -195,6 +190,7 @@ namespace NpgsqlTests
         }
 
 #if NET_2_0
+
         [Test]
         //.ctor (String, NpgsqlDbType, Int32, String, ParameterDirection, bool, byte, byte, DataRowVersion, object)
         public void Constructor7()
@@ -246,7 +242,7 @@ namespace NpgsqlTests
         [Test]
         public void InferType_ByteArray()
         {
-            var value = new Byte[] {0x0a, 0x0d};
+            var value = new Byte[] { 0x0a, 0x0d };
 
             var param = new NpgsqlParameter();
             param.Value = value;
@@ -514,7 +510,7 @@ namespace NpgsqlTests
             Assert.AreEqual(NpgsqlDbType.Smallint, param.NpgsqlDbType, "#B1");
             Assert.AreEqual(DbType.Int16, param.DbType, "#B2");
 
-            value = (Int16) 0;
+            value = (Int16)0;
             param = new NpgsqlParameter();
             param.Value = value;
             Assert.AreEqual(NpgsqlDbType.Smallint, param.NpgsqlDbType, "#C1");
@@ -601,7 +597,7 @@ namespace NpgsqlTests
                 catch (ArgumentException ex)
                 {
                     // The parameter data type of ... is invalid
-                    Assert.AreEqual(typeof (ArgumentException), ex.GetType(), "#A2");
+                    Assert.AreEqual(typeof(ArgumentException), ex.GetType(), "#A2");
                     Assert.IsNull(ex.InnerException, "#A3");
                     Assert.IsNotNull(ex.Message, "#A4");
                     Assert.IsNull(ex.ParamName, "#A5");
@@ -615,7 +611,7 @@ namespace NpgsqlTests
                 catch (ArgumentException ex)
                 {
                     // The parameter data type of ... is invalid
-                    Assert.AreEqual(typeof (ArgumentException), ex.GetType(), "#B2");
+                    Assert.AreEqual(typeof(ArgumentException), ex.GetType(), "#B2");
                     Assert.IsNull(ex.InnerException, "#B3");
                     Assert.IsNotNull(ex.Message, "#B4");
                     Assert.IsNull(ex.ParamName, "#B5");
@@ -763,7 +759,7 @@ namespace NpgsqlTests
             Assert.AreEqual(DbType.Int32, p.DbType, "#D1");
             Assert.AreEqual(NpgsqlDbType.Integer, p.NpgsqlDbType, "#D2");
 #endif
-            p.Value = new byte[] {0x0a};
+            p.Value = new byte[] { 0x0a };
             Assert.AreEqual(DbType.Binary, p.DbType, "#E1");
             Assert.AreEqual(NpgsqlDbType.Bytea, p.NpgsqlDbType, "#E2");
             p.Value = null;
@@ -857,6 +853,7 @@ namespace NpgsqlTests
         }
 
 #if NET_2_0
+
         [Test]
         public void ResetDbType()
         {
@@ -990,6 +987,7 @@ namespace NpgsqlTests
         }
 
 #if NET_2_0
+
         [Test]
         public void SourceColumnNullMapping()
         {
@@ -1000,6 +998,7 @@ namespace NpgsqlTests
             p.SourceColumnNullMapping = false;
             Assert.IsFalse(p.SourceColumnNullMapping, "#3");
         }
+
 #endif
 
         [Test]
@@ -1047,7 +1046,7 @@ namespace NpgsqlTests
             var p = new NpgsqlParameter("zipcode", 3510);
             try
             {
-                p.NpgsqlDbType = (NpgsqlDbType) 666;
+                p.NpgsqlDbType = (NpgsqlDbType)666;
                 Assert.Fail("#1");
             }
             catch (ArgumentOutOfRangeException ex)
@@ -1055,7 +1054,7 @@ namespace NpgsqlTests
 #if NET_2_0
                 // The NpgsqlDbType enumeration value, 666, is
                 // invalid
-                Assert.AreEqual(typeof (ArgumentOutOfRangeException), ex.GetType(), "#2");
+                Assert.AreEqual(typeof(ArgumentOutOfRangeException), ex.GetType(), "#2");
                 Assert.IsNull(ex.InnerException, "#3");
                 Assert.IsNotNull(ex.Message, "#4");
                 Assert.IsTrue(ex.Message.IndexOf("666") != -1, "#5:" + ex.Message);
@@ -1072,6 +1071,7 @@ namespace NpgsqlTests
         }
 
 #if NET_2_0
+
         [Test]
         public void NpgsqlValue()
         {
@@ -1110,8 +1110,8 @@ namespace NpgsqlTests
             parameter.NpgsqlValue = value;
             Assert.AreEqual(NpgsqlDbType.Timestamp, parameter.NpgsqlDbType, "DateTime:NpgsqlDbType");
             Assert.IsNotNull(parameter.NpgsqlValue, "DateTime:SqlValue1");
-            Assert.AreEqual(typeof (NpgsqlTimeStamp), parameter.NpgsqlValue.GetType(), "DateTime:SqlValue2");
-            Assert.AreEqual(value, (DateTime) ((NpgsqlTimeStamp) parameter.NpgsqlValue), "DateTime:SqlValue3");
+            Assert.AreEqual(typeof(NpgsqlTimeStamp), parameter.NpgsqlValue.GetType(), "DateTime:SqlValue2");
+            Assert.AreEqual(value, (DateTime)((NpgsqlTimeStamp)parameter.NpgsqlValue), "DateTime:SqlValue3");
             Assert.AreEqual(value, parameter.Value, "DateTime:Value");
 
 #if NeedsPorting
@@ -1198,6 +1198,7 @@ namespace NpgsqlTests
             //Assert.AreEqual ("XA", parameter.Value, "Chars:Value");
 #endif
         }
+
 #endif
 
 #if NeedsPorting
@@ -1687,7 +1688,7 @@ namespace NpgsqlTests
         {
             NpgsqlParameter p;
 
-            p = new NpgsqlParameter("name", (Object) null);
+            p = new NpgsqlParameter("name", (Object)null);
             p.Value = 42;
             Assert.AreEqual(DbType.Int32, p.DbType, "#A:DbType");
             Assert.AreEqual(NpgsqlDbType.Integer, p.NpgsqlDbType, "#A:NpgsqlDbType");
@@ -1822,7 +1823,7 @@ namespace NpgsqlTests
             using (var command = new NpgsqlCommand())
             {
                 // Put plenty of parameters in the collection to turn on hash lookup functionality.
-                for (int i = 0 ; i < 10 ; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     command.Parameters.AddWithValue(string.Format("p{0:00}", i + 1), NpgsqlDbType.Text, string.Format("String parameter value {0}", i + 1));
                 }
@@ -1851,7 +1852,6 @@ namespace NpgsqlTests
         [Test]
         public void NpgsqlParameterCloneTest()
         {
-
             var param = new NpgsqlParameter();
 
             param.Value = 5;
@@ -1880,7 +1880,6 @@ namespace NpgsqlTests
             Assert.AreEqual(param.NpgsqlValue, newParam.NpgsqlValue);
             Assert.AreEqual(param.SourceColumnNullMapping, newParam.SourceColumnNullMapping);
             Assert.AreEqual(param.NpgsqlValue, newParam.NpgsqlValue);
-
         }
     }
 }

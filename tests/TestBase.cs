@@ -20,19 +20,13 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+using Npgsql;
+using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Configuration;
-using System.Diagnostics;
 using System.Reflection;
 using System.Text;
-using Npgsql;
-
-using NpgsqlTypes;
-
-using NUnit.Framework;
 
 namespace NpgsqlTests
 {
@@ -68,8 +62,8 @@ namespace NpgsqlTests
         /// May be overridden in fixtures, e.g. to set special connection parameters
         /// </summary>
         protected virtual string ConnectionString { get { return _connectionString; } }
-        private string _connectionString;
 
+        private string _connectionString;
 
         /// <summary>
         /// New ConectionString property crafted to change the database name from original TestBase.ConnectionString to append a "_ef" suffix.
@@ -81,7 +75,7 @@ namespace NpgsqlTests
             {
                 if (connectionStringEF == null)
                 {
-                    //Reuse all strings just add _ef at end of database name for 
+                    //Reuse all strings just add _ef at end of database name for
                     var connectionSB = new NpgsqlConnectionStringBuilder(ConnectionString);
                     connectionSB.Database += "_ef";
                     connectionStringEF = connectionSB.ConnectionString;
@@ -89,6 +83,7 @@ namespace NpgsqlTests
                 return connectionStringEF;
             }
         }
+
         private string connectionStringEF;
 
         /// <summary>
@@ -102,8 +97,6 @@ namespace NpgsqlTests
         /// Multiple fixtures may run in the same session but we only want to create the schema once.
         /// </summary>
         private bool _schemaCreated;
-
-        #region Setup / Teardown
 
         [TestFixtureSetUp]
         public virtual void TestFixtureSetup()
@@ -163,7 +156,7 @@ namespace NpgsqlTests
             catch
             // Throwing an exception here causes all tests to fail without running.
             // CommandTests.SuppressBinaryBackendEncodingInitTest() provides error information in event of failure.
-            {}
+            { }
         }
 
         [SetUp]
@@ -204,7 +197,7 @@ namespace NpgsqlTests
                 }
                 catch (NpgsqlException e)
                 {
-                    if (! e.Message.ToLower().Contains("\"data\" does not exist"))
+                    if (!e.Message.ToLower().Contains("\"data\" does not exist"))
                     {
                         throw;
                     }
@@ -254,19 +247,22 @@ namespace NpgsqlTests
                             field_circle                  CIRCLE
                 ");
 
-                if (Conn.PostgreSqlVersion >= new Version(9, 1)) {
+                if (Conn.PostgreSqlVersion >= new Version(9, 1))
+                {
                     sb.Append(",").AppendLine();
                     sb.Append(@"field_hstore hstore.HSTORE");
                 }
 
-                if (Conn.PostgreSqlVersion >= new Version(9, 2)) {
+                if (Conn.PostgreSqlVersion >= new Version(9, 2))
+                {
                     sb.Append(",").AppendLine();
                     sb.Append(@"field_json JSON");
                     sb.Append(",").AppendLine();
                     sb.Append(@"field_smallserial SMALLSERIAL");
                 }
 
-                if (Conn.PostgreSqlVersion >= new Version(9, 4)) {
+                if (Conn.PostgreSqlVersion >= new Version(9, 4))
+                {
                     sb.Append(",").AppendLine();
                     sb.Append(@"field_jsonb JSONB");
                 }
@@ -285,7 +281,8 @@ namespace NpgsqlTests
             else
             {
                 try { ExecuteNonQuery(String.Format("CREATE SCHEMA {0}", schemaName)); }
-                catch (NpgsqlException e) {
+                catch (NpgsqlException e)
+                {
                     if (e.Code != "42P06")
                         throw;
                 }
@@ -301,9 +298,9 @@ namespace NpgsqlTests
             get
             {
                 return typeof(TestBase)
-                    .GetCustomAttributes(typeof (TestFixtureAttribute), false)
+                    .GetCustomAttributes(typeof(TestFixtureAttribute), false)
                     .Cast<TestFixtureAttribute>()
-                    .Select(a => new Version((string) a.Arguments[0]))
+                    .Select(a => new Version((string)a.Arguments[0]))
                     .Max();
             }
         }
@@ -314,11 +311,7 @@ namespace NpgsqlTests
             //NpgsqlEventLog.EchoMessages = true;
         }
 
-        #endregion
-
-        #region Utilities for use by tests
-
-        protected int ExecuteNonQuery(string sql, NpgsqlConnection conn=null)
+        protected int ExecuteNonQuery(string sql, NpgsqlConnection conn = null)
         {
             if (conn == null)
                 conn = Conn;
@@ -333,10 +326,6 @@ namespace NpgsqlTests
             using (var cmd = new NpgsqlCommand(sql, conn))
                 return cmd.ExecuteScalar();
         }
-
-        #endregion
-
-        #region Binary backend suppression
 
         // Some tests need to suppress binary backend formatting of parameters and result values,
         // so that both binary and text formatting can be tested.
@@ -415,7 +404,5 @@ namespace NpgsqlTests
 
             return new BackendBinarySuppressor(SuppressBinaryBackendEncoding);
         }
-
-        #endregion
     }
 }

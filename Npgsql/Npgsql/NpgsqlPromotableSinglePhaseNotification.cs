@@ -36,7 +36,7 @@ namespace Npgsql
         private NpgsqlTransactionCallbacks _callbacks;
         private INpgsqlResourceManager _rm;
         private bool _inTransaction;
-        internal bool InLocalTransaction { get { return _npgsqlTx != null;  } }
+        internal bool InLocalTransaction { get { return _npgsqlTx != null; } }
 
         private static readonly String CLASSNAME = MethodBase.GetCurrentMethod().DeclaringType.Name;
 
@@ -94,8 +94,6 @@ namespace Npgsql
                 }
             }
         }
-
-        #region IPromotableSinglePhaseNotification Members
 
         public void Initialize()
         {
@@ -163,10 +161,6 @@ namespace Npgsql
             _inTransaction = false;
         }
 
-        #endregion
-
-        #region ITransactionPromoter Members
-
         public byte[] Promote()
         {
             NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "Promote");
@@ -190,8 +184,6 @@ namespace Npgsql
             return token;
         }
 
-        #endregion
-
         private static INpgsqlResourceManager _resourceManager;
         private static System.Runtime.Remoting.Lifetime.ClientSponsor _sponser;
 
@@ -204,8 +196,8 @@ namespace Npgsql
                 AppDomain rmDomain = AppDomain.CreateDomain("NpgsqlResourceManager", AppDomain.CurrentDomain.Evidence, AppDomain.CurrentDomain.SetupInformation);
                 _resourceManager =
                     (INpgsqlResourceManager)
-                    rmDomain.CreateInstanceAndUnwrap(typeof (NpgsqlResourceManager).Assembly.FullName,
-                                                     typeof (NpgsqlResourceManager).FullName);
+                    rmDomain.CreateInstanceAndUnwrap(typeof(NpgsqlResourceManager).Assembly.FullName,
+                                                     typeof(NpgsqlResourceManager).FullName);
                 _sponser.Register((MarshalByRefObject)_resourceManager);
             }
             return _resourceManager;
@@ -218,16 +210,22 @@ namespace Npgsql
             {
                 case IsolationLevel.Chaos:
                     return System.Data.IsolationLevel.Chaos;
+
                 case IsolationLevel.ReadCommitted:
                     return System.Data.IsolationLevel.ReadCommitted;
+
                 case IsolationLevel.ReadUncommitted:
                     return System.Data.IsolationLevel.ReadUncommitted;
+
                 case IsolationLevel.RepeatableRead:
                     return System.Data.IsolationLevel.RepeatableRead;
+
                 case IsolationLevel.Serializable:
                     return System.Data.IsolationLevel.Serializable;
+
                 case IsolationLevel.Snapshot:
                     return System.Data.IsolationLevel.Snapshot;
+
                 case IsolationLevel.Unspecified:
                 default:
                     return System.Data.IsolationLevel.Unspecified;

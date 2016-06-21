@@ -23,6 +23,7 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using NpgsqlTypes;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -30,7 +31,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using NpgsqlTypes;
 
 namespace Npgsql
 {
@@ -41,7 +41,8 @@ namespace Npgsql
     {
         // Logging related values
         //private static readonly String CLASSNAME = MethodBase.GetCurrentMethod().DeclaringType.Name;
-        private readonly  static ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly static ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType);
+
         // Commented out because SetRowUpdatingHandler() is commented, and causes an "is never used" warning
         // private NpgsqlRowUpdatingEventHandler rowUpdatingHandler;
 
@@ -133,7 +134,7 @@ namespace Npgsql
             catch
             {
                 command.Parameters.Clear();
-                 throw;
+                throw;
             }
         }
 
@@ -212,7 +213,7 @@ namespace Npgsql
                             types = rdr.GetString(1).Split().Select(int.Parse).ToArray();
                         }
                     }
-                    else 
+                    else
                         throw new InvalidOperationException(String.Format(resman.GetString("Exception_InvalidFunctionName"), command.CommandText));
                 }
 
@@ -239,12 +240,15 @@ namespace Npgsql
                             case "i":
                                 param.Direction = ParameterDirection.Input;
                                 break;
+
                             case "o":
                                 param.Direction = ParameterDirection.Output;
                                 break;
+
                             case "b":
                                 param.Direction = ParameterDirection.InputOutput;
                                 break;
+
                             case "v":
                                 throw new NotImplementedException("Cannot derive function parameter of type VARIADIC");
                             case "t":
@@ -254,7 +258,7 @@ namespace Npgsql
                                     "Unknown code in proargmodes while deriving: " + modes[i]);
                         }
                     }
-                    
+
                     command.Parameters.Add(param);
                 }
             }
@@ -273,11 +277,11 @@ namespace Npgsql
         }
 
         /// <summary>
-        /// Gets the automatically generated <see cref="NpgsqlCommand"/> object required to perform insertions 
+        /// Gets the automatically generated <see cref="NpgsqlCommand"/> object required to perform insertions
         /// at the data source, optionally using columns for parameter names.
         /// </summary>
         /// <param name="useColumnsForParameterNames">
-        /// If <c>true</c>, generate parameter names matching column names, if possible. 
+        /// If <c>true</c>, generate parameter names matching column names, if possible.
         /// If <c>false</c>, generate @p1, @p2, and so on.
         /// </param>
         /// <returns>
@@ -285,7 +289,7 @@ namespace Npgsql
         /// </returns>
         public new NpgsqlCommand GetInsertCommand(bool useColumnsForParameterNames)
         {
-            NpgsqlCommand cmd = (NpgsqlCommand) base.GetInsertCommand(useColumnsForParameterNames);
+            NpgsqlCommand cmd = (NpgsqlCommand)base.GetInsertCommand(useColumnsForParameterNames);
             cmd.UpdatedRowSource = UpdateRowSource.None;
             return cmd;
         }
@@ -307,7 +311,7 @@ namespace Npgsql
         /// at the data source, optionally using columns for parameter names.
         /// </summary>
         /// <param name="useColumnsForParameterNames">
-        /// If <c>true</c>, generate parameter names matching column names, if possible. 
+        /// If <c>true</c>, generate parameter names matching column names, if possible.
         /// If <c>false</c>, generate @p1, @p2, and so on.
         /// </param>
         /// <returns>
@@ -333,7 +337,7 @@ namespace Npgsql
         }
 
         /// <summary>
-        /// Gets the automatically generated <see cref="NpgsqlCommand"/> object required to perform deletions 
+        /// Gets the automatically generated <see cref="NpgsqlCommand"/> object required to perform deletions
         /// at the data source, optionally using columns for parameter names.
         /// </summary>
         /// <param name="useColumnsForParameterNames">
@@ -345,7 +349,7 @@ namespace Npgsql
         /// </returns>
         public new NpgsqlCommand GetDeleteCommand(bool useColumnsForParameterNames)
         {
-            NpgsqlCommand cmd = (NpgsqlCommand) base.GetDeleteCommand(useColumnsForParameterNames);
+            NpgsqlCommand cmd = (NpgsqlCommand)base.GetDeleteCommand(useColumnsForParameterNames);
             cmd.UpdatedRowSource = UpdateRowSource.None;
             return cmd;
         }
@@ -363,15 +367,15 @@ namespace Npgsql
         //    }
         //}
 
-/*
-        private static void SetParameterValuesFromRow(NpgsqlCommand command, DataRow row)
-        {
-            foreach (NpgsqlParameter parameter in command.Parameters)
-            {
-                parameter.Value = row[parameter.SourceColumn, parameter.SourceVersion];
-            }
-        }
-*/
+        /*
+                private static void SetParameterValuesFromRow(NpgsqlCommand command, DataRow row)
+                {
+                    foreach (NpgsqlParameter parameter in command.Parameters)
+                    {
+                        parameter.Value = row[parameter.SourceColumn, parameter.SourceVersion];
+                    }
+                }
+        */
 
         /// <summary>
         /// Applies the parameter information.
@@ -382,8 +386,7 @@ namespace Npgsql
         /// <param name="whereClause">if set to <c>true</c> [where clause].</param>
         protected override void ApplyParameterInfo(DbParameter p, DataRow row, StatementType statementType, bool whereClause)
         {
-
-            NpgsqlParameter parameter = (NpgsqlParameter) p;
+            NpgsqlParameter parameter = (NpgsqlParameter)p;
 
             /* TODO: Check if this is the right thing to do.
              * ADO.Net seems to set this property to true when creating the parameter for the following query:
@@ -400,7 +403,6 @@ namespace Npgsql
             else
 
                 parameter.NpgsqlDbType = NpgsqlTypesHelper.GetNativeTypeInfo((Type)row[SchemaTableColumn.DataType]).NpgsqlDbType;
-
         }
 
         /// <summary>

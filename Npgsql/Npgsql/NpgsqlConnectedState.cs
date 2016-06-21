@@ -25,8 +25,6 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-using System.IO;
-
 namespace Npgsql
 {
     internal sealed class NpgsqlConnectedState : NpgsqlState
@@ -37,7 +35,7 @@ namespace Npgsql
         {
         }
 
-        public override void Startup(NpgsqlConnector context,NpgsqlConnectionStringBuilder settings)
+        public override void Startup(NpgsqlConnector context, NpgsqlConnectionStringBuilder settings)
         {
             NpgsqlStartupPacket startupPacket = new NpgsqlStartupPacket(context.Database, context.UserName, settings);
 

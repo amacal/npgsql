@@ -24,17 +24,10 @@
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+using Npgsql;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.IO;
-using Npgsql;
 
 namespace NpgsqlTypes
 {
@@ -42,6 +35,7 @@ namespace NpgsqlTypes
     /// Delegate called to convert the given native data to its backand representation.
     /// </summary>
     internal delegate byte[] ConvertNativeToBackendTextHandler(NpgsqlNativeTypeInfo TypeInfo, Object NativeData, Boolean forExtendedQuery, NativeToBackendTypeConverterOptions options, bool arrayElement);
+
     internal delegate byte[] ConvertNativeToBackendBinaryHandler(NpgsqlNativeTypeInfo TypeInfo, Object NativeData, NativeToBackendTypeConverterOptions options);
 
     internal delegate object ConvertProviderTypeToFrameworkTypeHander(object value);
@@ -103,7 +97,7 @@ namespace NpgsqlTypes
 
         static NpgsqlNativeTypeInfo()
         {
-            ni = (NumberFormatInfo) CultureInfo.InvariantCulture.NumberFormat.Clone();
+            ni = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
             ni.NumberDecimalDigits = 15;
         }
 
@@ -292,7 +286,7 @@ namespace NpgsqlTypes
                 return null; // Extended query expects null values be represented as null.
             }
 
-            if (! NpgsqlTypesHelper.SuppressBinaryBackendEncoding && _ConvertNativeToBackendBinary != null)
+            if (!NpgsqlTypesHelper.SuppressBinaryBackendEncoding && _ConvertNativeToBackendBinary != null)
             {
                 return _ConvertNativeToBackendBinary(this, NativeData, options);
             }
@@ -318,12 +312,12 @@ namespace NpgsqlTypes
                     // Do a special handling of Enum values.
                     // Translate enum value to its underlying type.
                     backendSerialization = BackendEncoding.UTF8Encoding.GetBytes((String)
-                        Convert.ChangeType(Enum.Format(NativeData.GetType(), NativeData, "d"), typeof (String),
+                        Convert.ChangeType(Enum.Format(NativeData.GetType(), NativeData, "d"), typeof(String),
                                            CultureInfo.InvariantCulture));
                 }
                 else if (NativeData is IFormattable)
                 {
-                    backendSerialization = BackendEncoding.UTF8Encoding.GetBytes(((IFormattable) NativeData).ToString(null, ni));
+                    backendSerialization = BackendEncoding.UTF8Encoding.GetBytes(((IFormattable)NativeData).ToString(null, ni));
                 }
                 else
                 {
@@ -378,7 +372,7 @@ namespace NpgsqlTypes
         /// </summary>
         public bool SupportsBinaryBackendData
         {
-            get { return (! NpgsqlTypesHelper.SuppressBinaryBackendEncoding && _ConvertNativeToBackendBinary != null); }
+            get { return (!NpgsqlTypesHelper.SuppressBinaryBackendEncoding && _ConvertNativeToBackendBinary != null); }
         }
     }
 }

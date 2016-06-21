@@ -27,6 +27,8 @@
 //        0.00.0000 - 06/17/2002 - ulrich sprick - created
 //                  - 06/??/2004 - Glen Parker<glenebob@nwlink.com> rewritten
 
+using Mono.Security.Protocol.Tls;
+using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -36,10 +38,6 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using Mono.Security.Protocol.Tls;
-using NpgsqlTypes;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Npgsql
 {
@@ -107,6 +105,7 @@ namespace Npgsql
 
         // The physical network connection socket and stream to the backend.
         private Socket _socket;
+
         private NpgsqlNetworkStream _baseStream;
 
         // The top level stream to the backend.
@@ -196,7 +195,7 @@ namespace Npgsql
 
         public NpgsqlConnector(NpgsqlConnection Connection)
             : this(Connection.CopyConnectionStringBuilder(), Connection.Pooling, false)
-        {}
+        { }
 
         /// <summary>
         /// Constructor.
@@ -218,7 +217,6 @@ namespace Npgsql
             _portalIndex = 0;
             _notificationThreadStopCount = 1;
         }
-
 
         //Finalizer should never be used, but if some incident has left to a connector being abandoned (most likely
         //case being a user not cleaning up a connection properly) then this way we can at least reduce the damage.
@@ -401,9 +399,9 @@ namespace Npgsql
                 {
                     sql = this.initQueries + sql;
                 }
-                using(NpgsqlCommand cmd = new NpgsqlCommand(sql, this))
+                using (NpgsqlCommand cmd = new NpgsqlCommand(sql, this))
                 {
-                    compareValue = (string) cmd.ExecuteScalar();
+                    compareValue = (string)cmd.ExecuteScalar();
                 }
 
                 if (compareValue != testValue)
@@ -444,7 +442,7 @@ namespace Npgsql
         {
             NpgsqlCommand.ExecuteBlind(this, NpgsqlQuery.DiscardAll);
 
-            // The initial connection parameters will be restored via IsValid() when get connector from pool later 
+            // The initial connection parameters will be restored via IsValid() when get connector from pool later
         }
 
         internal void ReleaseRegisteredListen()
@@ -468,7 +466,7 @@ namespace Npgsql
                         NpgsqlCommand.ExecuteBlind(this, String.Format("DEALLOCATE \"{0}{1}\";", _planNamePrefix, i));
                     }
                     // Ignore any error which may occur when releasing portals as this portal name may not be valid anymore. i.e.: the portal name was used on a prepared query which had errors.
-                    catch {}
+                    catch { }
                 }
             }
 
@@ -607,8 +605,10 @@ namespace Npgsql
         {
             get
             {
-                if (!_isRedshift.HasValue) {
-                    using (var cmd = new NpgsqlCommand("SELECT version()", this)) {
+                if (!_isRedshift.HasValue)
+                {
+                    using (var cmd = new NpgsqlCommand("SELECT version()", this))
+                    {
                         var versionStr = (string)cmd.ExecuteScalar();
                         _isRedshift = versionStr.ToLower().Contains("redshift");
                     }
@@ -762,14 +762,14 @@ namespace Npgsql
             this._supportsSavepoint = (ServerVersion >= new Version(8, 0, 0));
             this._supportsDiscard = (ServerVersion >= new Version(8, 3, 0));
             this._supportsApplicationName = (ServerVersion >= new Version(9, 0, 0));
-            this._supportsExtraFloatDigits3 =(ServerVersion >= new Version(9, 0, 0));
-            this._supportsExtraFloatDigits = (ServerVersion >= new Version(7, 4, 0)); 
+            this._supportsExtraFloatDigits3 = (ServerVersion >= new Version(9, 0, 0));
+            this._supportsExtraFloatDigits = (ServerVersion >= new Version(7, 4, 0));
             this._supportsSslRenegotiationLimit = ((ServerVersion >= new Version(8, 4, 3)) ||
                      (ServerVersion >= new Version(8, 3, 10) && ServerVersion < new Version(8, 4, 0)) ||
                      (ServerVersion >= new Version(8, 2, 16) && ServerVersion < new Version(8, 3, 0)) ||
                      (ServerVersion >= new Version(8, 1, 20) && ServerVersion < new Version(8, 2, 0)) ||
                      (ServerVersion >= new Version(8, 0, 24) && ServerVersion < new Version(8, 1, 0)) ||
-                     (ServerVersion >= new Version(7, 4, 28) && ServerVersion < new Version(8, 0, 0)) );
+                     (ServerVersion >= new Version(7, 4, 28) && ServerVersion < new Version(8, 0, 0)));
             this._supportsLcMonetary = (ServerVersion >= new Version(8, 1, 0));
 
             // Per the PG documentation, E string literal prefix support appeared in PG version 8.1.
@@ -811,7 +811,7 @@ namespace Npgsql
             try
             {
                 // Establish protocol communication and handle authentication...
-                CurrentState.Startup(this,settings);
+                CurrentState.Startup(this, settings);
             }
             catch (NpgsqlException)
             {
@@ -906,7 +906,6 @@ namespace Npgsql
 
         internal void CancelRequest()
         {
-
             NpgsqlConnector cancelConnector = new NpgsqlConnector(settings, false, false);
 
             cancelConnector._backend_keydata = BackEndKeyData;
@@ -923,7 +922,6 @@ namespace Npgsql
             {
                 cancelConnector.CurrentState.Close(cancelConnector);
             }
-
         }
 
         ///<summary>
@@ -1055,7 +1053,7 @@ namespace Npgsql
                     while (true)
                     {
                         // Mono's implementation of System.Threading.Monitor does not appear to give threads
-                        // priority on a first come/first serve basis, as does Microsoft's.  As a result, 
+                        // priority on a first come/first serve basis, as does Microsoft's.  As a result,
                         // under mono, this loop may execute many times even after another thread has attempted
                         // to lock on _socket.  A short Sleep() seems to solve the problem effectively.
                         // Note that Sleep(0) does not work.
@@ -1075,7 +1073,6 @@ namespace Npgsql
                 {
                     this.connector._notificationException = ex;
                 }
-
             }
         }
 

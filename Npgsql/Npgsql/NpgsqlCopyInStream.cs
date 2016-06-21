@@ -136,7 +136,7 @@ namespace Npgsql
         /// </summary>
         public override void Write(byte[] buf, int off, int len)
         {
-            if (! IsActive)
+            if (!IsActive)
             {
                 throw new ObjectDisposedException("Writing to closed " + this);
             }
@@ -150,7 +150,7 @@ namespace Npgsql
         /// </summary>
         public override void Flush()
         {
-            if (! IsActive)
+            if (!IsActive)
             {
                 throw new ObjectDisposedException("Flushing closed " + this);
             }

@@ -28,13 +28,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Resources;
-using System.Text;
 using System.Threading;
 
 namespace Npgsql
@@ -53,7 +50,7 @@ namespace Npgsql
             throw new InvalidOperationException("Internal Error! " + this);
         }
 
-        public virtual void Startup(NpgsqlConnector context,NpgsqlConnectionStringBuilder settings)
+        public virtual void Startup(NpgsqlConnector context, NpgsqlConnectionStringBuilder settings)
         {
             throw new InvalidOperationException("Internal Error! " + this);
         }
@@ -83,7 +80,7 @@ namespace Npgsql
             //ZA  Hnotifytest CNOTIFY Z
             //Qlisten notifytest;notify notifytest;
             Stream stm = context.Stream;
-//            string uuidString = "uuid" + Guid.NewGuid().ToString("N");
+            //            string uuidString = "uuid" + Guid.NewGuid().ToString("N");
             string uuidString = string.Format("uuid{0:N}", Guid.NewGuid());
             Queue<byte> buffer = new Queue<byte>();
             byte[] convertBuffer = new byte[36];
@@ -97,7 +94,7 @@ namespace Npgsql
                 {
                     throw new EndOfStreamException();
                 }
-                buffer.Enqueue((byte) newByte);
+                buffer.Enqueue((byte)newByte);
                 if (buffer.Count > 35)
                 {
                     buffer.CopyTo(convertBuffer, 0);
@@ -136,7 +133,7 @@ namespace Npgsql
             stm.Flush();
             Queue<int> buffer = new Queue<int>();
             //byte[] compareBuffer = new byte[6];
-            int[] messageSought = new int[] {'Z', 0, 0, 0, 5};
+            int[] messageSought = new int[] { 'Z', 0, 0, 0, 5 };
             int newByte;
             for (;;)
             {
@@ -165,6 +162,7 @@ namespace Npgsql
                             }
                         }
                         break;
+
                     default:
                         buffer.Enqueue(newByte);
                         if (buffer.Count > 5)
@@ -320,7 +318,7 @@ namespace Npgsql
 
                             ProcessAndDiscardBackendResponses(context);
                         }
-                        catch(Exception)
+                        catch (Exception)
                         {
                         }
                         // We should have gotten an error from CancelRequest(). Whether we did or not, what we
@@ -335,18 +333,17 @@ namespace Npgsql
 
                 return ProcessBackendResponses(context);
             }
-            catch(ThreadAbortException)
+            catch (ThreadAbortException)
             {
                 try
                 {
                     context.CancelRequest();
                     context.Close();
                 }
-                catch {}
+                catch { }
 
                 throw;
             }
-
         }
 
         /// <summary>
@@ -360,7 +357,7 @@ namespace Npgsql
         /// <returns><c>true</c>, if for context socket availability was checked, <c>false</c> otherwise.</returns>
         /// <param name="context">Context.</param>
         /// <param name="selectMode">Select mode.</param>
-        internal bool CheckForContextSocketAvailability (NpgsqlConnector context, SelectMode selectMode)
+        internal bool CheckForContextSocketAvailability(NpgsqlConnector context, SelectMode selectMode)
         {
             /* Socket.Poll supports integer as microseconds parameter.
              * This limits the usable command timeout value
@@ -383,16 +380,16 @@ namespace Npgsql
              */
             while ((secondsToWait > limitOfSeconds) && (!socketPoolResponse))
             {
-                socketPoolResponse = context.Socket.Poll (1000000 * limitOfSeconds, selectMode);
+                socketPoolResponse = context.Socket.Poll(1000000 * limitOfSeconds, selectMode);
                 secondsToWait -= limitOfSeconds;
             }
 
-            return socketPoolResponse || context.Socket.Poll (1000000 * secondsToWait, selectMode);
+            return socketPoolResponse || context.Socket.Poll(1000000 * secondsToWait, selectMode);
         }
 
         private static NpgsqlCopyFormat ReadCopyHeader(Stream stream)
         {
-            byte copyFormat = (byte) stream.ReadByte();
+            byte copyFormat = (byte)stream.ReadByte();
             Int16 numCopyFields = PGUtil.ReadInt16(stream);
             Int16[] copyFieldFormats = new Int16[numCopyFields];
             for (Int16 i = 0; i < numCopyFields; i++)
@@ -421,11 +418,10 @@ namespace Npgsql
                     _rowsAffected = rowsAffected;
                 else
                     _rowsAffected = null;
-
             }
             _lastInsertedOID = (tokens.Length > 2 && tokens[0].Trim().ToUpperInvariant() == "INSERT")
                                    ? long.Parse(tokens[1])
-                                   : (long?) null;
+                                   : (long?)null;
         }
 
         public long? LastInsertedOID
@@ -471,7 +467,6 @@ namespace Npgsql
             outputStream.WriteBytes(_messageData);
         }
     }
-
 
     /// <summary>
     /// Marker interface which identifies a class which represents part of

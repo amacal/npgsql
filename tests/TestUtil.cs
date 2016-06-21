@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System;
 
 namespace NpgsqlTests
 {
@@ -35,6 +32,7 @@ namespace NpgsqlTests
     public class IssueLink : Attribute
     {
         public string LinkAddress { get; private set; }
+
         public IssueLink(string linkAddress)
         {
             LinkAddress = linkAddress;
@@ -47,7 +45,7 @@ namespace NpgsqlTests
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
     public class MonoIgnore : Attribute, ITestAction
     {
-        readonly string _ignoreText;
+        private readonly string _ignoreText;
 
         public MonoIgnore(string ignoreText = null) { _ignoreText = ignoreText; }
 
@@ -63,17 +61,18 @@ namespace NpgsqlTests
         }
 
         public void AfterTest(TestDetails testDetails) { }
+
         public ActionTargets Targets { get { return ActionTargets.Test; } }
     }
-    
+
     /// <summary>
     /// Causes the test to be ignored if the Postgresql backend version is less than the given one.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
     public class MinPgVersion : Attribute, ITestAction
     {
-        readonly Version _minVersion;
-        readonly string _ignoreText;
+        private readonly Version _minVersion;
+        private readonly string _ignoreText;
 
         public MinPgVersion(int major, int minor, int build, string ignoreText = null)
         {
@@ -98,6 +97,7 @@ namespace NpgsqlTests
         }
 
         public void AfterTest(TestDetails testDetails) { }
+
         public ActionTargets Targets { get { return ActionTargets.Test; } }
     }
 

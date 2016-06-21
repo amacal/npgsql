@@ -27,10 +27,9 @@
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 using System;
-using System.IO;
-using System.Net;
-using System.Reflection;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace Npgsql
 {
@@ -46,9 +45,10 @@ namespace Npgsql
 
         // Private fields.
         private readonly List<byte[]> parameterNames = new List<byte[]>(10);
+
         private readonly List<byte[]> parameterValues = new List<byte[]>(10);
 
-        public NpgsqlStartupPacket(String database_name, String user_name, NpgsqlConnectionStringBuilder  settings)
+        public NpgsqlStartupPacket(String database_name, String user_name, NpgsqlConnectionStringBuilder settings)
         {
             NpgsqlEventLog.LogMethodEnter(LogLevel.Debug, CLASSNAME, "BuildStartupPacket");
 
@@ -58,12 +58,12 @@ namespace Npgsql
             parameters.Add("client_encoding", "UTF8");
             parameters.Add("extra_float_digits", "2");
 
-            if (! string.IsNullOrEmpty(settings.ApplicationName))
+            if (!string.IsNullOrEmpty(settings.ApplicationName))
             {
                 parameters.Add("application_name", settings.ApplicationName);
             }
 
-            if (! string.IsNullOrEmpty(settings.SearchPath))
+            if (!string.IsNullOrEmpty(settings.SearchPath))
             {
                 parameters.Add("search_path", settings.SearchPath);
             }

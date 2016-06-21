@@ -23,12 +23,10 @@
 // AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS
 // ON AN "AS IS" BASIS, AND THE NPGSQL DEVELOPMENT TEAM HAS NO OBLIGATIONS
 // TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-using System;
-using System.Data;
-
+using Npgsql;
 using NpgsqlTypes;
 using NUnit.Framework;
-using Npgsql;
+using System;
 
 namespace NpgsqlTests
 {
@@ -94,35 +92,35 @@ namespace NpgsqlTests
 
             input = "1 year";
             test = NpgsqlInterval.Parse(input);
-            Assert.AreEqual(TimeSpan.FromDays(30*12).Ticks, test.TotalTicks, input);
+            Assert.AreEqual(TimeSpan.FromDays(30 * 12).Ticks, test.TotalTicks, input);
 
             input = "2 years";
             test = NpgsqlInterval.Parse(input);
-            Assert.AreEqual(TimeSpan.FromDays(30*24).Ticks, test.TotalTicks, input);
+            Assert.AreEqual(TimeSpan.FromDays(30 * 24).Ticks, test.TotalTicks, input);
 
             input = "1 year -1 mon";
             test = NpgsqlInterval.Parse(input);
-            Assert.AreEqual(TimeSpan.FromDays(30*11).Ticks, test.TotalTicks, input);
+            Assert.AreEqual(TimeSpan.FromDays(30 * 11).Ticks, test.TotalTicks, input);
 
             input = "1 year -2 mons";
             test = NpgsqlInterval.Parse(input);
-            Assert.AreEqual(TimeSpan.FromDays(30*10).Ticks, test.TotalTicks, input);
+            Assert.AreEqual(TimeSpan.FromDays(30 * 10).Ticks, test.TotalTicks, input);
 
             input = "1 year -1 day";
             test = NpgsqlInterval.Parse(input);
-            Assert.AreEqual(TimeSpan.FromDays(30*12 - 1).Ticks, test.TotalTicks, input);
+            Assert.AreEqual(TimeSpan.FromDays(30 * 12 - 1).Ticks, test.TotalTicks, input);
 
             input = "1 year -2 days";
             test = NpgsqlInterval.Parse(input);
-            Assert.AreEqual(TimeSpan.FromDays(30*12 - 2).Ticks, test.TotalTicks, input);
+            Assert.AreEqual(TimeSpan.FromDays(30 * 12 - 2).Ticks, test.TotalTicks, input);
 
             input = "1 year -1 mon -1 day";
             test = NpgsqlInterval.Parse(input);
-            Assert.AreEqual(TimeSpan.FromDays(30*11 - 1).Ticks, test.TotalTicks, input);
+            Assert.AreEqual(TimeSpan.FromDays(30 * 11 - 1).Ticks, test.TotalTicks, input);
 
             input = "1 year -2 mons -2 days";
             test = NpgsqlInterval.Parse(input);
-            Assert.AreEqual(TimeSpan.FromDays(30*10 - 2).Ticks, test.TotalTicks, input);
+            Assert.AreEqual(TimeSpan.FromDays(30 * 10 - 2).Ticks, test.TotalTicks, input);
 
             input = "1 day 2:3:4.005";
             test = NpgsqlInterval.Parse(input);
@@ -245,11 +243,11 @@ namespace NpgsqlTests
             Assert.AreEqual("14 mons 3 days 04:05:06.007", new NpgsqlInterval(1, 2, 3, 4, 5, 6, 7).ToString());
 
             Assert.AreEqual(new NpgsqlInterval(0, 2, 3, 4, 5).ToString(), new NpgsqlInterval(new TimeSpan(0, 2, 3, 4, 5)).ToString());
-            
+
             Assert.AreEqual(new NpgsqlInterval(1, 2, 3, 4, 5).ToString(), new NpgsqlInterval(new TimeSpan(1, 2, 3, 4, 5)).ToString());
-            const long moreThanAMonthInTicks = TimeSpan.TicksPerDay*40;
+            const long moreThanAMonthInTicks = TimeSpan.TicksPerDay * 40;
             Assert.AreEqual(new NpgsqlInterval(moreThanAMonthInTicks).ToString(), new NpgsqlInterval(new TimeSpan(moreThanAMonthInTicks)).ToString());
-            
+
             var oldCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
             var testCulture = new System.Globalization.CultureInfo("fr-FR");
             Assert.AreEqual(",", testCulture.NumberFormat.NumberDecimalSeparator, "decimal seperator");
@@ -600,7 +598,7 @@ namespace NpgsqlTests
             var utcOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
             // add utc time as timespan to get local time as a timespan
             var localTime = utcOffset + new TimeSpan(0, 18, 3, 45, 1);
-            var localDateTime = (DateTime) timetz;
+            var localDateTime = (DateTime)timetz;
 
             Assert.AreEqual(localTime.Hours, localDateTime.Hour);
             Assert.AreEqual(localTime.Minutes, localDateTime.Minute);
@@ -612,7 +610,6 @@ namespace NpgsqlTests
             Assert.AreEqual(3, timetz.LocalTime.Minutes);
             Assert.AreEqual(45, timetz.LocalTime.Seconds);
             Assert.AreEqual(1, timetz.LocalTime.Milliseconds);
-
         }
 
         [Test]

@@ -28,7 +28,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 
 namespace Npgsql
 {
@@ -50,13 +49,16 @@ namespace Npgsql
 
         // Stream for user to exchange COPY data
         private Stream _copyStream;
+
         // Size of data chunks read from user stream and written to server in COPY IN
         private int _copyBufferSize = 8192;
+
         // Very temporary holder of data received during COPY OUT
         private byte[] _receivedCopyData;
 
         // Last command sent.  This is saved for possible later use by NpgsqlException if an error occurs.
         private byte[] _sqlSent = null;
+
         private SQLSentType _sqlSentType = SQLSentType.None;
 
         // The current command timeout on the backend.  This is set via "SET statement_timeout = <milliseconds>".
@@ -66,19 +68,18 @@ namespace Npgsql
         {
             switch (_sqlSentType)
             {
-                case SQLSentType.None :
+                case SQLSentType.None:
                     return "";
 
                 case SQLSentType.Parse:
                     return string.Format("{{PARSE}} {0}", BackendEncoding.UTF8Encoding.GetString(_sqlSent));
 
-                case SQLSentType.Execute :
+                case SQLSentType.Execute:
                     return string.Format("{{EXECUTE}} {0}", BackendEncoding.UTF8Encoding.GetString(_sqlSent));
 
-                default :
+                default:
                     return BackendEncoding.UTF8Encoding.GetString(_sqlSent);
-
-            } 
+            }
         }
 
         public void SetSqlSent(byte[] sqlSent, SQLSentType sqlSentType)
