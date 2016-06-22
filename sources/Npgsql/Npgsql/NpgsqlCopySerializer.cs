@@ -27,6 +27,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Npgsql
 {
@@ -63,7 +64,7 @@ namespace Npgsql
         /// <summary>
         /// Default buffer size.
         /// </summary>
-        public const int DEFAULT_BUFFER_SIZE = 8192;
+        public const int DEFAULT_BUFFER_SIZE = 64 * 8192;
 
         private static readonly CultureInfo _cultureInfo = CultureInfo.InvariantCulture;    // PostgreSQL currently only supports SQL notation for decimal point (which is the same as InvariantCulture)
 
@@ -351,7 +352,7 @@ namespace Npgsql
             {
                 if (_stringsToEscape == null)
                 {
-                    _stringsToEscape = new String[] { Delimiter, Separator, Escape, "\r", "\n" };
+                    _stringsToEscape = new[] { Delimiter, Separator, Escape, "\r", "\n" }.Distinct().ToArray();
                 }
                 return _stringsToEscape;
             }

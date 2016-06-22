@@ -98,7 +98,7 @@ namespace Npgsql
                     if (value != null)
                         DisplayNameValue = value;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -115,7 +115,7 @@ namespace Npgsql
                     if (value != null)
                         DescriptionValue = value;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
