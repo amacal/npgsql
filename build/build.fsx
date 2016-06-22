@@ -44,7 +44,7 @@ Target "CreatePackage" (fun _ ->
             Version = "1.0"
             OutputPath = "./build/package"
             WorkingDir = "./build/release"
-            Dependencies = []
+            Dependencies = [ "Mono.Security", GetPackageVersion "./packages/" "Mono.Security" ]
             Files = [( "Npgsql.dll", Some "lib\\net40", None )]
             Publish = false }) "./build/build.nuspec"
 )
