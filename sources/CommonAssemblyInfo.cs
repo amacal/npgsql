@@ -3,13 +3,8 @@ using System.Reflection;
 using System.Resources;
 using System.Security;
 
-// Contains assembly attributes shared by all Npgsql projects
-
 [assembly: CLSCompliantAttribute(true)]
 [assembly: AllowPartiallyTrustedCallersAttribute()]
-#if NET40
-[assembly: System.Security.SecurityRules(System.Security.SecurityRuleSet.Level1)]
-#endif
 [assembly: AssemblyCompanyAttribute("Npgsql Development Team")]
 [assembly: AssemblyProductAttribute("Npgsql")]
 [assembly: AssemblyCopyrightAttribute("Copyright © 2002 - 2014 Npgsql Development Team")]

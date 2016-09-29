@@ -4247,31 +4247,5 @@ namespace NpgsqlTests
                 }
             }
         }
-
-        [Test]
-        [IssueLink("https://github.com/npgsql/npgsql/issues/395")]
-        public void DefaultCommandTimeout()
-        {
-            if (Conn.Connector.DefaultCommandTimeout >= 100 && Conn.Connector.DefaultCommandTimeout < 105)
-                TestUtil.Inconclusive("Bad default command timeout");
-            using (var c1 = new NpgsqlConnection(ConnectionString + ";CommandTimeout=100"))
-            {
-                using (var cmd = c1.CreateCommand())
-                {
-                    Assert.That(cmd.CommandTimeout, Is.EqualTo(100));
-                    using (var c2 = new NpgsqlConnection(ConnectionString + ";CommandTimeout=101"))
-                    {
-                        cmd.Connection = c2;
-                        Assert.That(cmd.CommandTimeout, Is.EqualTo(101));
-                    }
-                    cmd.CommandTimeout = 102;
-                    using (var c2 = new NpgsqlConnection(ConnectionString + ";CommandTimeout=101"))
-                    {
-                        cmd.Connection = c2;
-                        Assert.That(cmd.CommandTimeout, Is.EqualTo(102));
-                    }
-                }
-            }
-        }
     }
 }
