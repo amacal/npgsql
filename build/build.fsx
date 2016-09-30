@@ -41,7 +41,7 @@ Target "ExecuteTests" (fun _ ->
 Target "CreatePackage" (fun _ ->
      NuGet (fun p -> 
         { p with
-            Version = "1.2"
+            Version = "1.4"
             OutputPath = "./build/package"
             WorkingDir = "./build/release"
             Dependencies = [ "Mono.Security", GetPackageVersion "./packages/" "Mono.Security" ]

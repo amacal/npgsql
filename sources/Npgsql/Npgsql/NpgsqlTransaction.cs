@@ -41,7 +41,7 @@ namespace Npgsql
     public sealed class NpgsqlTransaction : DbTransaction
     {
         private static readonly String CLASSNAME = MethodBase.GetCurrentMethod().DeclaringType.Name;
-        private static readonly ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType.FullName, MethodBase.GetCurrentMethod().DeclaringType.Assembly);
+        private static readonly ResourceManager resman = new ResourceManager("Npgsql.NpgsqlTransaction", MethodBase.GetCurrentMethod().DeclaringType.Assembly);
 
         private NpgsqlConnection _conn = null;
         private readonly IsolationLevel _isolation = IsolationLevel.ReadCommitted;

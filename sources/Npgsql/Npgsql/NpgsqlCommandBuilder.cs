@@ -41,7 +41,7 @@ namespace Npgsql
     {
         // Logging related values
         //private static readonly String CLASSNAME = MethodBase.GetCurrentMethod().DeclaringType.Name;
-        private readonly static ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType.FullName, MethodBase.GetCurrentMethod().DeclaringType.Assembly);
+        private readonly static ResourceManager resman = new ResourceManager("Npgsql.NpgsqlCommandBuilder", MethodBase.GetCurrentMethod().DeclaringType.Assembly);
 
         // Commented out because SetRowUpdatingHandler() is commented, and causes an "is never used" warning
         // private NpgsqlRowUpdatingEventHandler rowUpdatingHandler;
