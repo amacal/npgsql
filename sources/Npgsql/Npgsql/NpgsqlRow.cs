@@ -41,7 +41,7 @@ namespace Npgsql
     /// </summary>
     internal abstract class NpgsqlRow : IStreamOwner
     {
-        protected static readonly ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType);
+        protected static readonly ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType.FullName, MethodBase.GetCurrentMethod().DeclaringType.Assembly);
         public abstract object this[int index] { get; }
         public abstract int NumFields { get; }
 

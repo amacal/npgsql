@@ -43,7 +43,7 @@ namespace Npgsql
     internal abstract partial class NpgsqlState
     {
         private readonly String CLASSNAME = MethodBase.GetCurrentMethod().DeclaringType.Name;
-        protected readonly static ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType);
+        protected readonly static ResourceManager resman = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType.FullName, MethodBase.GetCurrentMethod().DeclaringType.Assembly);
 
         public virtual void Open(NpgsqlConnector context, Int32 timeout)
         {

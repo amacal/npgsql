@@ -77,7 +77,7 @@ namespace Npgsql
         // static constructor
         static NpgsqlEventLog()
         {
-            LogResMan = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType);
+            LogResMan = new ResourceManager(MethodBase.GetCurrentMethod().DeclaringType.FullName, MethodBase.GetCurrentMethod().DeclaringType.Assembly);
         }
 
         ///<summary>
